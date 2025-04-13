@@ -83,7 +83,8 @@ label {
     color: #555;
 }
 
-
+input[type="text"], 
+input[type="number"], 
 select {
     width: 100%;
     padding: 10px;
@@ -93,6 +94,8 @@ select {
     transition: border-color 0.3s;
 }
 
+input[type="text"], 
+input[type="number"], 
 select:focus {
     border-color: #1a73e8;
     outline: none;
