@@ -83,8 +83,7 @@ label {
     color: #555;
 }
 
-input[type="text"],
-input[type="number"],
+
 select {
     width: 100%;
     padding: 10px;
@@ -94,8 +93,6 @@ select {
     transition: border-color 0.3s;
 }
 
-input[type="text"]:focus,
-input[type="number"]:focus,
 select:focus {
     border-color: #1a73e8;
     outline: none;
@@ -156,7 +153,7 @@ button {
     background-color: #e0e0e0;
 }
 
-/* Search Results Styles */
+
 .search_results {
     padding: 20px;
     background-color: #fff;
