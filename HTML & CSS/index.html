@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CarMatch - Hitta din perfekta bil</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="container">
+    <header>
+        <h1>CarMatch</h1>
+        <p>Hitta din perfekta bil baserat på dina önskemål</p>
+    </header>
+
+    <main id="search">
+        <div id="search_form_wrapper" class="page">
+            <form id="search_form" class="search_form">
+                <h2>Hitta din perfekta bil</h2>
+
+                <div class="form_section">
+                    <h3>Bilegenskaper</h3>
+
+                    <div class="form_group">
+                       <!--- <label for="make">Bilmärke</label>
+                        <select id="make" name="make">
+                            <option value="">Välj bilmärke</option>
+                            <option value="volvo">Volvo</option>
+                            <option value="bmw">BMW</option>
+                            <option value="audi">Audi</option>
+                            <option value="tesla">Tesla</option>
+                            <option value="toyota">Toyota</option>
+                            <option value="volkswagen">Volkswagen</option>
+                        </select> -->  <!--Ska ändras till databas, bara för demo-->
+                    </div>
+
+                    <div class="form_wrapper_car_info">
+                        <label for="model">Bilmodell</label>
+                        <input type="text" id="model" name="model" placeholder="T.ex. 320i">
+                    </div>
+
+                    <div class="form_wrapper_car_info">
+                        <label for="year">Årsmodell</label>
+                        <input type="number" id="year" name="year" placeholder="T.ex. 2023">
+                        
+                    </div>
+
+                    <div class="form_wrapper_car_info">
+                        <label for="horsePower">Hästkraft</label>
+                        <input type="number" id="horsePower" name="horsePower" placeholder="T.ex. 150 hk">
+                        <span id="horsePower_error" class="error"></span>
+                    </div>
+                </div>
+
+                <div class="form_section">
+                    <h3>Ekonomiska parametrar</h3>
+
+                    <div class="form_row">
+                        <div class="form_wrapper_car_info">
+                            <label for="priceMin">Lägsta pris (SEK)</label>
+                            <input type="number" id="priceMin" name="priceMin" placeholder="Min">
+                        </div>
+
+                        <div class="form_wrapper_car_info">
+                            <label for="priceMax">Högsta pris (SEK)</label>
+                            <input type="number" id="priceMax" name="priceMax" placeholder="Max">
+                        </div>
+                    </div>
+                    <span id="price_error" class="error"></span>
+                </div>
+
+                <div class="form_section">
+                    <h3>Praktiska parametrar</h3>
+
+                    <div class="form_wrapper_car_info">
+                        <label for="seats">Antal platser</label>
+                        <select id="seats" name="seats">
+                            <option value="">Välj antal platser</option>
+                            <option value="2">2</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                            <option value="7">7</option>
+                            <option value="9">9+</option>
+                        </select>
+                    </div>
+
+                    <div class="form_wrapper_car_info">
+                        <label for="fuelType">Bränsletyp</label>
+                        <select id="fuelType" name="fuelType">
+                            <option value="">Välj bränsletyp</option>
+                            <option value="bensin">Bensin</option>
+                            <option value="diesel">Diesel</option>
+                            <option value="el">El</option>
+                            <option value="hybrid">Hybrid</option>
+                            <option value="plugin">Plug-in hybrid</option>
+                        </select>
+                    </div>
+
+                    <div class="form_wrapper_car_info">
+                        <label for="engineType">Motortyp</label>
+                        <select id="engineType" name="engineType">
+                            <option value="">Välj motortyp</option>
+                            <option value="sedan">Sedan</option>
+                            <option value="suv">SUV</option>
+                            <option value="kombi">Kombi</option>
+                            <option value="coupe">Coupé</option>
+                            <option value="cabriolet">Cabriolet</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form_actions">
+                    <button type="submit" class="search_button">Sök bilar</button>
+                    <button type="reset" class="reset_button">Rensa</button>
+                </div>
+            </form>
+        </div>
+
+        <div id="search_results_container" class="search_results" style="display: none;">
+            <h2>Rekommenderade bilar</h2>
+
+            <div class="results_count">
+                <p id="results_count_text">Hittade 5 bilar som matchar dina kriterier</p>
+            </div>
+
+            <div id="car_list" class="car_list">
+            
+            </div>
+
+            <div class="search_again">
+                <button id="back_button" class="back_button">Ändra sökkriterier</button>
+            </div>
+        </div>
+
+        <div id="no_results_container" class="no_results" style="display: none;">
+            <p>Inga bilar hittades som matchar dina kriterier.</p>
+            <p>Prova att ändra dina sökkriterier och försök igen.</p>
+            <button id="back_button_no_results" class="back_button">Tillbaka till sökning</button>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 CarMatch - Grupp 16</p>
+    </footer>
+</div>
+
+</body>
+</html>
