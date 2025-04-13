@@ -48,24 +48,25 @@
                     <div class="form_wrapper_car_info">
                         <label for="horsePower">Hästkraft</label>
                         <input type="number" id="horsePower" name="horsePower" placeholder="T.ex. 150 hk">
+                        <span id="horsePower_error" class="error"></span>
                     </div>
                 </div>
 
                 <div class="form_section">
                     <h3>Ekonomiska parametrar</h3>
 
-                    <div class="form_row">
+                    <div class="form_row_price">
                         <div class="form_wrapper_car_info">
-                            <label for="priceMin">Lägsta pris (SEK)</label>
-                            <input type="number" id="priceMin" name="priceMin" placeholder="Min">
+                            <label for="price_min">Lägsta pris (SEK)</label>
+                            <input type="number" id="price_min" name="price_min" placeholder="Min">
                         </div>
 
                         <div class="form_wrapper_car_info">
-                            <label for="priceMax">Högsta pris (SEK)</label>
-                            <input type="number" id="priceMax" name="priceMax" placeholder="Max">
+                            <label for="price_max">Högsta pris (SEK)</label>
+                            <input type="number" id="price_max" name="price_max" placeholder="Max">
                         </div>
                     </div>
-                    
+                    <span id="price_error" class="error"></span>
                 </div>
 
                 <div class="form_section">
@@ -79,13 +80,12 @@
                             <option value="4">4</option>
                             <option value="5">5</option>
                             <option value="7">7</option>
-                            <option value="9">9+</option>
                         </select>
                     </div>
 
                     <div class="form_wrapper_car_info">
-                        <label for="fuelType">Bränsletyp</label>
-                        <select id="fuelType" name="fuelType">
+                        <label for="fuel_type">Bränsletyp</label>
+                        <select id="fuel_type" namze="fuel_type">
                             <option value="">Välj bränsletyp</option>
                             <option value="bensin">Bensin</option>
                             <option value="diesel">Diesel</option>
@@ -96,8 +96,8 @@
                     </div>
 
                     <div class="form_wrapper_car_info">
-                        <label for="engineType">Motortyp</label>
-                        <select id="engineType" name="engineType">
+                        <label for="engine_type">Motortyp</label>
+                        <select id="engine_type" name="engine_type">
                             <option value="">Välj motortyp</option>
                             <option value="sedan">Sedan</option>
                             <option value="suv">SUV</option>
@@ -108,14 +108,14 @@
                     </div>
                 </div>
 
-                <div class="form_actions">
+                <div class="form_btn">
                     <button type="submit" class="search_button">Sök bilar</button>
                     <button type="reset" class="reset_button">Rensa</button>
                 </div>
             </form>
         </div>
 
-        <div id="search_results_container" class="search_results" style="display: none;">
+        <div id="search_results" class="search_results_wrapper" style="display: none;">
             <h2>Rekommenderade bilar</h2>
 
             <div class="results_count">
@@ -129,12 +129,6 @@
             <div class="search_again">
                 <button id="back_button" class="back_button">Ändra sökkriterier</button>
             </div>
-        </div>
-
-        <div id="no_results_container" class="no_results" style="display: none;">
-            <p>Inga bilar hittades som matchar dina kriterier.</p>
-            <p>Prova att ändra dina sökkriterier och försök igen.</p>
-            <button id="back_button_no_results" class="back_button">Tillbaka till sökning</button>
         </div>
     </main>
 

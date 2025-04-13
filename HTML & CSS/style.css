@@ -67,12 +67,12 @@ header h1 {
     margin-bottom: 15px;
 }
 
-.form_row {
+.form_row_price {
     display: flex;
     gap: 20px;
 }
 
-.form_row .form_wrapper_car_info {
+.form_row_price .form_wrapper_car_info {
     flex: 1;
 }
 
@@ -106,7 +106,7 @@ select:focus {
     display: block;
 }
 
-.form_actions {
+.form_btn {
     display: flex;
     justify-content: center;
     gap: 15px;
@@ -154,14 +154,14 @@ button {
 }
 
 
-.search_results {
+.search_results_wrapper {
     padding: 20px;
     background-color: #fff;
     border-radius: 8px;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
 
-.search_results h2 {
+.search_results_wrapper h2 {
     text-align: center;
     color: #1a73e8;
     margin-bottom: 30px;
