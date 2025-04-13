@@ -1,0 +1,153 @@
+<!-- search-form.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CarMatch - Find Your Perfect Car</title>
+  <link rel="stylesheet" href="css/global.css">
+  <link rel="stylesheet" href="css/search-form.css">
+</head>
+<body>
+<header class="header">
+  <div class="container">
+    <div class="header-content">
+      <div class="logo">
+        <a href="index.html">
+          <h1>CarMatch</h1>
+        </a>
+      </div>
+
+      <nav class="main-nav">
+        <ul class="nav-links">
+          <li><a href="index.html" class="active">Home</a></li>
+          <li><a href="login.html">Login</a></li>
+          <li><a href="register.html">Register</a></li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+</header>
+
+<main class="container">
+  <div class="search-form-container" id="search-form">
+    <h2>Find Your Perfect Car</h2>
+
+    <div class="form-feedback" id="form-feedback" style="display: none;"></div>
+
+    <form id="carSearchForm">
+      <div class="form-grid">
+        <!-- Basic Car Information -->
+        <div class="form-section">
+          <h3>Car Information</h3>
+
+          <div class="form-group">
+            <label for="brand">Brand</label>
+            <select id="brand" name="brand">
+              <option value="">Select Brand</option>
+              <!-- Will be populated with JavaScript -->
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="model">Model</label>
+            <select id="model" name="model" disabled>
+              <option value="">Select Model</option>
+              <!-- Will be populated with JavaScript based on brand -->
+            </select>
+            <small class="help-text" id="model-help">Please select a brand first</small>
+          </div>
+
+          <div class="form-group">
+            <label for="year">Year</label>
+            <select id="year" name="year">
+              <option value="">Select Year</option>
+              <!-- Will be populated with JavaScript -->
+            </select>
+            <div class="error-message" id="year-error"></div>
+          </div>
+
+          <div class="form-group">
+            <label for="horsepower">Horsepower (min)</label>
+            <input type="number" id="horsepower" name="horsepower" min="0" placeholder="e.g. 150">
+            <div class="error-message" id="horsepower-error"></div>
+          </div>
+        </div>
+
+        <!-- Economic Parameters -->
+        <div class="form-section">
+          <h3>Price Range</h3>
+
+          <div class="form-group">
+            <label for="minPrice">Minimum Price ($)</label>
+            <input type="number" id="minPrice" name="minPrice" min="0" placeholder="e.g. 10000">
+            <div class="error-message" id="minPrice-error"></div>
+          </div>
+
+          <div class="form-group">
+            <label for="maxPrice">Maximum Price ($)</label>
+            <input type="number" id="maxPrice" name="maxPrice" min="0" placeholder="e.g. 50000">
+            <div class="error-message" id="maxPrice-error"></div>
+          </div>
+        </div>
+
+        <!-- Practical Parameters -->
+        <div class="form-section">
+          <h3>Additional Features</h3>
+
+          <div class="form-group">
+            <label for="seats">Minimum Seats</label>
+            <input type="number" id="seats" name="seats" min="1" max="10" placeholder="e.g. 5">
+            <div class="error-message" id="seats-error"></div>
+          </div>
+
+          <div class="form-group">
+            <label for="fuelType">Fuel Type</label>
+            <select id="fuelType" name="fuelType">
+              <option value="">Select Fuel Type</option>
+              <option value="Gasoline">Gasoline</option>
+              <option value="Diesel">Diesel</option>
+              <option value="Electric">Electric</option>
+              <option value="Hybrid">Hybrid</option>
+              <option value="Plug-in Hybrid">Plug-in Hybrid</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="engineType">Engine Type</label>
+            <select id="engineType" name="engineType">
+              <option value="">Select Engine Type</option>
+              <option value="Inline-4">Inline-4</option>
+              <option value="V6">V6</option>
+              <option value="V8">V8</option>
+              <option value="Inline-6">Inline-6</option>
+              <option value="Flat-4">Flat-4</option>
+              <option value="Electric Motor">Electric Motor</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div class="error-message form-error" id="form-error"></div>
+
+      <div class="form-actions">
+        <button type="button" class="reset-button" id="resetButton">
+          Reset
+        </button>
+        <button type="submit" class="search-button" id="searchButton">
+          Find Cars
+        </button>
+      </div>
+    </form>
+  </div>
+</main>
+
+<footer class="footer">
+  <div class="container">
+    <p>&copy; 2025 CarMatch. All rights reserved.</p>
+  </div>
+</footer>
+
+<script src="js/search-form.js"></script>
+</body>
+</html>

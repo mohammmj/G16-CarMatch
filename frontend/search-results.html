@@ -1,0 +1,148 @@
+<!-- search-results.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Search Results - CarMatch</title>
+  <link rel="stylesheet" href="css/global.css">
+  <link rel="stylesheet" href="css/search-results.css">
+</head>
+<body>
+<header class="header">
+  <div class="container">
+    <div class="header-content">
+      <div class="logo">
+        <a href="index.html">
+          <h1>CarMatch</h1>
+        </a>
+      </div>
+
+      <nav class="main-nav">
+        <ul class="nav-links">
+          <li><a href="index.html">Home</a></li>
+          <li><a href="login.html">Login</a></li>
+          <li><a href="register.html">Register</a></li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+</header>
+
+<main class="container">
+  <div class="search-results-page">
+    <div class="search-results-header">
+      <h1>Search Results</h1>
+
+      <div class="search-params-container">
+        <div class="search-params" id="search-params">
+          <!-- Search parameters will be displayed here -->
+        </div>
+
+        <button class="modify-search-button" id="modify-search-button">
+          Modify Search
+        </button>
+      </div>
+    </div>
+
+    <div class="loading-container" id="loading-container">
+      <div class="loading-spinner"></div>
+      <p>Searching for your perfect car...</p>
+    </div>
+
+    <div class="error-container" id="error-container" style="display: none;">
+      <p class="error-message" id="error-message"></p>
+      <button class="retry-button" id="retry-button">
+        Try Again
+      </button>
+    </div>
+
+    <div id="results-section" style="display: none;">
+      <div class="results-count" id="results-count">
+        <!-- Count will be displayed here -->
+      </div>
+
+      <div class="comparison-actions" id="comparison-actions" style="display: none;">
+        <button class="compare-button" id="compare-button">
+          Compare Selected Cars (<span id="selected-count">0</span>)
+        </button>
+        <button class="clear-selection-button" id="clear-selection-button">
+          Clear Selection
+        </button>
+      </div>
+
+      <div class="car-list" id="car-list">
+        <!-- Car results will be displayed here -->
+      </div>
+    </div>
+  </div>
+</main>
+
+<footer class="footer">
+  <div class="container">
+    <p>&copy; 2025 CarMatch. All rights reserved.</p>
+  </div>
+</footer>
+
+<!-- Car card template -->
+<template id="car-card-template">
+  <div class="car-card-wrapper">
+    <div class="car-selection">
+      <input type="checkbox" class="compare-checkbox" id="">
+      <label>Compare</label>
+    </div>
+
+    <div class="car-card">
+      <div class="car-card-match">
+        <div class="match-badge"></div>
+      </div>
+
+      <div class="car-card-image">
+        <img src="" alt="">
+      </div>
+
+      <div class="car-card-content">
+        <h3 class="car-card-title"></h3>
+        <p class="car-card-year"></p>
+        <div class="car-card-details">
+          <div class="car-card-detail">
+            <span class="detail-label">Horsepower:</span>
+            <span class="detail-value horsepower"></span>
+          </div>
+
+          <div class="car-card-detail">
+            <span class="detail-label">Seats:</span>
+            <span class="detail-value seats"></span>
+          </div>
+
+          <div class="car-card-detail">
+            <span class="detail-label">Fuel:</span>
+            <span class="detail-value fuel-type"></span>
+          </div>
+
+          <div class="car-card-detail">
+            <span class="detail-label">Engine:</span>
+            <span class="detail-value engine-type"></span>
+          </div>
+        </div>
+      </div>
+
+      <div class="car-card-footer">
+        <div class="car-card-price"></div>
+        <div class="car-card-actions">
+          <button class="favorite-button" title="Add to favorites">
+            <span class="favorite-icon">☆</span>
+          </button>
+
+          <a href="#" class="details-button">
+            View Details
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script src="js/search-results.js"></script>
+</body>
+</html>
