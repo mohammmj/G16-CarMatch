@@ -16,6 +16,10 @@ document.addEventListener('DOMContentLoaded', function() {
     const carList = document.getElementById('car-list');
     const carCardTemplate = document.getElementById('car-card-template');
 
+    // API endpoint base URL
+    const API_BASE_URL = 'http://localhost:3000/api/search';
+
+
     // Get search parameters from URL
     const urlParams = new URLSearchParams(window.location.search);
     const searchParams = {};
@@ -69,66 +73,72 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Format car price
     function formatPrice(price) {
-        return `$${parseInt(price).toLocaleString()}`;
+        return `$${parseFloat(price).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
     }
 
     // Create a car card from template
     function createCarCard(car) {
         console.log('Creating card for car:', car);
 
-        // Clone the template
-        const cardNode = document.importNode(carCardTemplate.content, true);
+        try {
+            // Clone the template
+            const cardNode = document.importNode(carCardTemplate.content, true);
 
-        // Set match percentage and color
-        const matchBadge = cardNode.querySelector('.match-badge');
-        matchBadge.textContent = `${car.matchPercentage}% Match`;
+            // Set match percentage and color
+            const matchBadge = cardNode.querySelector('.match-badge');
+            const matchValue = car.matchpercentage || car.matchPercentage || 100;
+            matchBadge.textContent = `${matchValue}% Match`;
 
-        // Set badge color based on match percentage
-        if (car.matchPercentage > 80) {
-            matchBadge.style.backgroundColor = '#4CAF50'; // Green
-        } else if (car.matchPercentage > 60) {
-            matchBadge.style.backgroundColor = '#FFC107'; // Yellow
-        } else {
-            matchBadge.style.backgroundColor = '#FF5722'; // Orange
+            // Set badge color based on match percentage
+            if (matchValue > 80) {
+                matchBadge.style.backgroundColor = '#4CAF50'; // Green
+            } else if (matchValue > 60) {
+                matchBadge.style.backgroundColor = '#FFC107'; // Yellow
+            } else {
+                matchBadge.style.backgroundColor = '#FF5722'; // Orange
+            }
+
+            // Set comparison checkbox
+            const checkbox = cardNode.querySelector('.compare-checkbox');
+            checkbox.id = `compare-${car.id}`;
+            checkbox.dataset.carId = car.id;
+            checkbox.addEventListener('change', handleCompareCheckbox);
+
+            // Set image
+            const img = cardNode.querySelector('.car-card-image img');
+            img.src = car.image_url || 'images/car-placeholder.jpg';
+            img.alt = `${car.brand} ${car.model}`;
+
+            // Set basic info
+            cardNode.querySelector('.car-card-title').textContent = `${car.brand} ${car.model}`;
+            cardNode.querySelector('.car-card-year').textContent = car.year;
+
+            // Set details
+            cardNode.querySelector('.horsepower').textContent = car.horsepower;
+            cardNode.querySelector('.seats').textContent = car.seats || 'N/A';
+            cardNode.querySelector('.fuel-type').textContent = car.fuel_type || 'N/A';
+            cardNode.querySelector('.engine-type').textContent = car.engine_type || 'N/A';
+
+            // Set price
+            cardNode.querySelector('.car-card-price').textContent = formatPrice(car.price);
+
+            // Set details link
+            const detailsLink = cardNode.querySelector('.details-button');
+            detailsLink.href = `car-details.html?id=${car.id}`;
+
+            // Set favorite button
+            const favoriteButton = cardNode.querySelector('.favorite-button');
+            favoriteButton.addEventListener('click', function(e) {
+                e.preventDefault();
+                // This would normally check if user is logged in and toggle favorite status
+                alert('Please log in to save favorites');
+            });
+
+            return cardNode;
+        } catch (error) {
+            console.error('Error creating car card:', error);
+            return document.createElement('div'); // Return empty div to avoid breaking the page
         }
-
-        // Set comparison checkbox
-        const checkbox = cardNode.querySelector('.compare-checkbox');
-        checkbox.id = `compare-${car.id}`;
-        checkbox.dataset.carId = car.id;
-        checkbox.addEventListener('change', handleCompareCheckbox);
-
-        // Set image
-        const img = cardNode.querySelector('.car-card-image img');
-        img.src = car.image_url || 'images/car-placeholder.jpg';
-        img.alt = `${car.brand} ${car.model}`;
-
-        // Set basic info
-        cardNode.querySelector('.car-card-title').textContent = `${car.brand} ${car.model}`;
-        cardNode.querySelector('.car-card-year').textContent = car.year;
-
-        // Set details
-        cardNode.querySelector('.horsepower').textContent = car.horsepower;
-        cardNode.querySelector('.seats').textContent = car.seats || 'N/A';
-        cardNode.querySelector('.fuel-type').textContent = car.fuel_type || 'N/A';
-        cardNode.querySelector('.engine-type').textContent = car.engine_type || 'N/A';
-
-        // Set price
-        cardNode.querySelector('.car-card-price').textContent = formatPrice(car.price);
-
-        // Set details link
-        const detailsLink = cardNode.querySelector('.details-button');
-        detailsLink.href = `car-details.html?id=${car.id}`;
-
-        // Set favorite button
-        const favoriteButton = cardNode.querySelector('.favorite-button');
-        favoriteButton.addEventListener('click', function(e) {
-            e.preventDefault();
-            // This would normally check if user is logged in and toggle favorite status
-            alert('Please log in to save favorites');
-        });
-
-        return cardNode;
     }
 
     // Handle compare checkbox changes
@@ -187,129 +197,40 @@ document.addEventListener('DOMContentLoaded', function() {
         selectedCount.textContent = '0';
     }
 
-    // Hardcoded car data
-    const hardcodedCars = [
-        {
-            id: 1,
-            brand: 'BMW',
-            model: '3 Series 330i',
-            year: 2021,
-            horsepower: 255,
-            price: 41999.99,
-            seats: 5,
-            fuel_type: 'Petrol',
-            engine_type: '2.0L I4 Turbo',
-            image_url: 'https://example.com/bmw330i.jpg',
-            matchPercentage: 95
-        },
-        {
-            id: 2,
-            brand: 'BMW',
-            model: '5 Series 540i',
-            year: 2022,
-            horsepower: 335,
-            price: 58999.00,
-            seats: 5,
-            fuel_type: 'Petrol',
-            engine_type: '3.0L I6 Turbo',
-            image_url: 'https://example.com/bmw540i.jpg',
-            matchPercentage: 87
-        },
-        {
-            id: 3,
-            brand: 'BMW',
-            model: 'X5 xDrive40i',
-            year: 2023,
-            horsepower: 375,
-            price: 65995.00,
-            seats: 5,
-            fuel_type: 'Petrol',
-            engine_type: '3.0L I6 Turbo',
-            image_url: 'https://example.com/bmwx5.jpg',
-            matchPercentage: 82
-        },
-        {
-            id: 4,
-            brand: 'BMW',
-            model: 'i4 M50',
-            year: 2022,
-            horsepower: 536,
-            price: 64900.00,
-            seats: 5,
-            fuel_type: 'Electric',
-            engine_type: 'Dual Electric Motor',
-            image_url: 'https://example.com/bmwi4m50.jpg',
-            matchPercentage: 75
-        },
-        {
-            id: 5,
-            brand: 'BMW',
-            model: 'M3 Competition',
-            year: 2023,
-            horsepower: 503,
-            price: 74995.00,
-            seats: 5,
-            fuel_type: 'Petrol',
-            engine_type: '3.0L I6 Twin Turbo',
-            image_url: 'https://example.com/bmwm3.jpg',
-            matchPercentage: 68
+    // Process and display car results
+    function displayCarResults(cars) {
+        // Hide loading state
+        loadingContainer.style.display = 'none';
+
+        // Display results
+        resultsCount.textContent = `Found ${cars.length} cars matching your criteria`;
+
+        // Clear existing results
+        carList.innerHTML = '';
+
+        if (cars.length === 0) {
+            // Show a message when no results are found
+            carList.innerHTML = `
+                <div class="no-results">
+                    <h3>No cars found matching your criteria</h3>
+                    <p>Try adjusting your search parameters for better results.</p>
+                </div>
+            `;
+        } else {
+            // Add each car card
+            cars.forEach(car => {
+                const cardElement = createCarCard(car);
+                carList.appendChild(cardElement);
+            });
         }
-    ];
 
-
-    // Filter cars based on search parameters
-    function filterCars(cars, params) {
-        return cars.filter(car => {
-            // Brand filter
-            if (params.brand && car.brand !== params.brand) {
-                return false;
-            }
-
-            // Model filter
-            if (params.model && !car.model.includes(params.model)) {
-                return false;
-            }
-
-            // Year filter
-            if (params.year && car.year !== parseInt(params.year)) {
-                return false;
-            }
-
-            // Horsepower filter
-            if (params.horsepower && car.horsepower < parseInt(params.horsepower)) {
-                return false;
-            }
-
-            // Price range filter
-            if (params.minPrice && car.price < parseInt(params.minPrice)) {
-                return false;
-            }
-            if (params.maxPrice && car.price > parseInt(params.maxPrice)) {
-                return false;
-            }
-
-            // Seats filter
-            if (params.seats && car.seats < parseInt(params.seats)) {
-                return false;
-            }
-
-            // Fuel type filter
-            if (params.fuelType && car.fuel_type !== params.fuelType) {
-                return false;
-            }
-
-            // Engine type filter
-            if (params.engineType && !car.engine_type.includes(params.engineType)) {
-                return false;
-            }
-
-            return true;
-        });
+        // Show results section
+        resultsSection.style.display = 'block';
     }
 
-    // Fetch car results (now using hardcoded data)
+    // Fetch car results from API
     async function fetchResults() {
-        console.log('Starting fetchResults function with hardcoded data');
+        console.log('Starting fetchResults function');
 
         // Show loading state
         loadingContainer.style.display = 'flex';
@@ -317,64 +238,48 @@ document.addEventListener('DOMContentLoaded', function() {
         resultsSection.style.display = 'none';
 
         try {
-            // Simulate API delay
-            await new Promise(resolve => setTimeout(resolve, 800));
-
-            // Filter cars based on search parameters
-            const filteredCars = Object.keys(searchParams).length > 0
-                ? filterCars(hardcodedCars, searchParams)
-                : hardcodedCars;
-
-            console.log(`Filtered to ${filteredCars.length} cars`);
-
-            // Hide loading state
-            loadingContainer.style.display = 'none';
-
-            // Display results
-            resultsCount.textContent = `Found ${filteredCars.length} cars matching your criteria`;
-
-            // Clear existing results
-            carList.innerHTML = '';
-
-            if (filteredCars.length === 0) {
-                // Show a message when no results are found
-                carList.innerHTML = `
-                    <div class="no-results">
-                        <h3>No cars found matching your criteria</h3>
-                        <p>Try adjusting your search parameters for better results.</p>
-                    </div>
-                `;
-            } else {
-                // Add each car card
-                filteredCars.forEach(car => {
-                    const cardElement = createCarCard(car);
-                    carList.appendChild(cardElement);
-                });
+            // Simple API URL construction
+            let searchUrl = API_BASE_URL;
+            if (Object.keys(searchParams).length > 0) {
+                searchUrl += '?' + new URLSearchParams(searchParams).toString();
             }
 
-            // Show results section
-            resultsSection.style.display = 'block';
+            console.log('Fetching from API URL:', searchUrl);
+
+            // Simplified fetch request
+            const response = await fetch(searchUrl);
+
+            if (!response.ok) {
+                throw new Error(`API responded with status ${response.status}`);
+            }
+
+            const cars = await response.json();
+            console.log(`Received ${cars.length} cars from API`);
+            displayCarResults(cars);
 
         } catch (error) {
-            console.error('Error processing results:', error);
+            console.error('Error fetching results:', error);
 
-            // Show error state
-            loadingContainer.style.display = 'none';
+            // Fall back to mock data if API is unreachable
+            console.log('Using mock data instead due to API error');
+            displayCarResults(MOCK_DATA);
+
+            // Show a warning to the user
+            errorMessage.textContent = 'Using sample data - could not connect to server.';
             errorContainer.style.display = 'flex';
-            errorMessage.textContent = 'Failed to load search results. Please try again.';
         }
     }
 
     // Initialize
     function init() {
-        console.log('Initializing search results page with hardcoded data');
+        console.log('Initializing search results page');
 
         // Display search parameters
         displaySearchParams();
 
         // Set up event listeners
         modifySearchButton.addEventListener('click', () => {
-            window.location.href = `search-form.html?${urlParams.toString()}`;
+            window.location.href = `index.html?${urlParams.toString()}`;
         });
 
         retryButton.addEventListener('click', fetchResults);
