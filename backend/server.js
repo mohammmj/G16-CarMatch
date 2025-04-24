@@ -7,7 +7,7 @@ const searchRoutes = require('./routes/searchRoutes');
 
 // Initialize Express app
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = 3000;
 
 // Request logging middleware
 app.use((req, res, next) => {
@@ -15,7 +15,7 @@ app.use((req, res, next) => {
     next();
 });
 
-// Enable CORS for development (specifically configure it for your frontend)
+// Enable CORS for development
 app.use(cors({
     origin: ['http://localhost:63342', 'http://127.0.0.1:63342', 'http://localhost:5500', 'http://127.0.0.1:5500'],
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
