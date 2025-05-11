@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="sv">
+    <head>
+        <meta charset="utf-8">
+        <title>Login - CarMatch</title>
+        <link rel="stylesheet" href="css/style.css">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-SgOJa3DmI69IUzQ2PVdRZhwQ+dy64/BUtbMJw1MZ8t5HZApcHrRKUc4W0kG879m7" crossorigin="anonymous">
+    </head>
+
+    <body>
+        <header>
+            <a href="index.html">
+                <h1>CarMatch</h1>
+            </a>
+
+            <nav>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="login.html" class="active">Login</a></li>
+                    <li><a href="register.html">Register</a></li>
+                </ul>
+            </nav>   
+        </header>
+
+        <div id="login_container">
+            <form id="form_login">
+                <h2>Login Information</h2>
+                <div class="form_log">
+                    <legend>Username</legend>
+                    <input type="text" id="username" name="username" placeholder="Enter your username" required>
+                </div>
+
+                <div class="form_log">
+                    <legend>Password</legend>
+                    <input type="password" id="password" name="password" placeholder="Enter your password" required>
+                </div>
+
+                <div class="login-buttons">
+                    <button type="button" class="btn btn-danger"><a href="index.html" style="color: white; text-decoration: none;">Cancel</a></button>
+                    <button type="button" class="btn btn-success"><a href="index.html" style="color: white; text-decoration: none;">Login</a></button>
+                </div>
+            </form>
+        </div>
+        
+        <footer >
+            <p> &copy; 2025 CarMatch.</p>
+        </footer>
+
+    </body>
+</html>
