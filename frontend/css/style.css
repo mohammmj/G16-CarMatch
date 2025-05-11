@@ -440,3 +440,48 @@
     width: 100%;
     margin-top: 1.5rem;
 }
+
+/* ================================================================== */
+  /*                        register                    */
+
+
+#reg_inp {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 2rem;
+}
+
+/* Formuläret (som du har class="row") */
+#reg_inp > form.row {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  width: 100%;
+  max-width: 350px;
+  background: #f8f9fa;;
+  padding: 2rem;
+  border-radius: var(--border-radius);
+  box-shadow: var(--card-shadow);
+}
+
+#reg_inp > form.row > .col-md-4,
+#reg_inp > form.row > .col-12 {
+  width: 100%;
+}
+
+
+#reg_inp > form.row .input-group {
+  width: 100%;
+}
+
+
+#reg_inp > form.row .form-check {
+  width: 100%;
+}
+#s_btn{
+  color: white;
+  text-decoration: none;
+}
+
+
