@@ -316,13 +316,12 @@ document.addEventListener('DOMContentLoaded', function() {
         } catch (error) {
             console.error('Error fetching results:', error);
 
-            // Fall back to mock data if API is unreachable
-            console.log('Using mock data instead due to API error');
-            displayCarResults(MOCK_DATA);
-
-            // Show a warning to the user
-            errorMessage.textContent = 'Using sample data - could not connect to server.';
+            // Show error message to user
+            errorMessage.textContent = 'Unable to connect to server. Please try again later.';
             errorContainer.style.display = 'flex';
+
+            // Display empty results
+            displayCarResults([]);
         }
     }
 
