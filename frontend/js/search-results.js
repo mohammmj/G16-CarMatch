@@ -1,4 +1,15 @@
 // frontend/js/search-results.js
+
+
+/**
+ * CarMatch Search Results Handler
+ *
+ * This script manages the search results page functionality:
+ * - Displays search parameters
+ * - Fetches search results from API (with fallback)
+ * - Creates and manages car cards from search results
+ * - Handles car comparison selection
+ */
 document.addEventListener('DOMContentLoaded', function() {
     // Elements
     const searchParamsContainer = document.getElementById('search-params');
@@ -33,7 +44,12 @@ document.addEventListener('DOMContentLoaded', function() {
 
     console.log('Search parameters from URL:', searchParams);
 
-    // Display search parameters
+    /**
+     * Displays the search parameters in the header
+     *
+     * Creates visual tags for each search parameter with
+     * formatted labels and values.
+     */
     function displaySearchParams() {
         // Clear existing parameters
         searchParamsContainer.innerHTML = '';
@@ -51,7 +67,6 @@ document.addEventListener('DOMContentLoaded', function() {
             engineType: 'Engine Type'
         };
 
-        // Format price values
         const formatPrice = (price) => {
             return `$${parseInt(price).toLocaleString()}`;
         };
@@ -71,12 +86,25 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Format car price
+    /**
+     * Formats a car price with proper currency formatting
+     *
+     * @param {number} price - The raw price value
+     * @returns {string} - Formatted price with currency symbol and commas
+     */
     function formatPrice(price) {
         return `$${parseFloat(price).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
     }
 
-    // Create a car card from template
+    /**
+     * Creates a car card from the HTML template and car data
+     *
+     * @param {Object} car - The car data object
+     * @returns {HTMLElement} - The populated car card DOM element
+     *
+     * Creates a complete car card with all car details and
+     * sets up event listeners for interactions.
+     */
     function createCarCard(car) {
         console.log('Creating card for car:', car);
 
@@ -141,7 +169,14 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // Handle compare checkbox changes
+    /**
+     * Handles car comparison checkbox changes
+     *
+     * @param {Event} e - The checkbox change event
+     *
+     * Updates comparison counter and manages checkbox states based
+     * on the number of selected cars (limiting to max 3).
+     */
     function handleCompareCheckbox(e) {
         const selectedCheckboxes = document.querySelectorAll('.compare-checkbox:checked');
         const count = selectedCheckboxes.length;
@@ -168,7 +203,12 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // Handle compare button click
+    /**
+     * Handles the compare button click event
+     *
+     * Redirects to the comparison page with selected car IDs
+     * if at least 2 cars are selected.
+     */
     function handleCompareClick() {
         const selectedCheckboxes = document.querySelectorAll('.compare-checkbox:checked');
 
@@ -183,7 +223,12 @@ document.addEventListener('DOMContentLoaded', function() {
         window.location.href = `car-comparison.html?cars=${carIds.join(',')}`;
     }
 
-    // Handle clear selection
+    /**
+     * Clears all selected comparison checkboxes
+     *
+     * Resets the comparison selection state, enabling all
+     * checkboxes and hiding the comparison actions.
+     */
     function clearSelection() {
         document.querySelectorAll('.compare-checkbox:checked').forEach(cb => {
             cb.checked = false;
@@ -197,7 +242,14 @@ document.addEventListener('DOMContentLoaded', function() {
         selectedCount.textContent = '0';
     }
 
-    // Process and display car results
+    /**
+     * Displays car search results on the page
+     *
+     * @param {Array} cars - Array of car objects to display
+     *
+     * Creates and appends car cards for each result, or displays
+     * a message if no results are found.
+     */
     function displayCarResults(cars) {
         // Hide loading state
         loadingContainer.style.display = 'none';
@@ -228,7 +280,11 @@ document.addEventListener('DOMContentLoaded', function() {
         resultsSection.style.display = 'block';
     }
 
-    // Fetch car results from API
+    /**
+     * Fetches car results from the API
+     *
+     * Attempts to get search results from the API endpoint
+     */
     async function fetchResults() {
         console.log('Starting fetchResults function');
 
@@ -270,7 +326,12 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // Initialize
+    /**
+     * Initializes the search results page
+     *
+     * Sets up event listeners, displays search parameters,
+     * and fetches search results.
+     */
     function init() {
         console.log('Initializing search results page');
 
@@ -290,5 +351,6 @@ document.addEventListener('DOMContentLoaded', function() {
         fetchResults();
     }
 
+    // Start initialization
     init();
 });

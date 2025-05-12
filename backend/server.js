@@ -1,4 +1,18 @@
 // backend/server.js
+
+/**
+ * CarMatch Server Application
+ *
+ * This is the main server file for the CarMatch application.
+ * It sets up the Express server, middleware, routes, and database connection.
+ *
+ * Features:
+ * - API endpoints for car search
+ * - Static file serving
+ * - CORS support for development
+ * - Error handling
+ * - Database connection verification
+ */
 const express = require('express');
 const path = require('path');
 const cors = require('cors');
@@ -9,37 +23,68 @@ const searchRoutes = require('./routes/searchRoutes');
 const app = express();
 const PORT = 3000;
 
-// Request logging middleware
+/**
+ * Request logging middleware
+ *
+ * Logs all incoming requests with timestamp, HTTP method, and URL
+ */
 app.use((req, res, next) => {
     console.log(`${new Date().toISOString()} - ${req.method} ${req.url}`);
     next();
 });
 
-// Enable CORS for development
+/**
+ * CORS middleware configuration
+ *
+ * Enables Cross-Origin Resource Sharing for development environments
+ */
 app.use(cors({
     origin: ['http://localhost:63342', 'http://127.0.0.1:63342', 'http://localhost:5500', 'http://127.0.0.1:5500'],
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     allowedHeaders: ['Content-Type', 'Authorization', 'Accept']
 }));
 
-// Parse JSON bodies
+/**
+ * Body parsing middleware
+ *
+ * Configures Express to parse incoming request bodies:
+ * - JSON for API requests
+ * - URL-encoded for form submissions
+ */
 app.use(express.json());
-
-// Parse URL-encoded bodies
 app.use(express.urlencoded({ extended: true }));
 
-// API routes
+/**
+ * API Routes
+ *
+ * Mounts the search routes module at the /api/search endpoint
+ * All car search functionality is accessible through this path
+ */
 app.use('/api/search', searchRoutes);
 
-// Serve static frontend files
+/**
+ * Static file serving
+ *
+ * Serves frontend files from the frontend directory
+ */
 app.use(express.static(path.join(__dirname, '../frontend')));
 
-// Handle SPA routing - For any route not matched by the server, serve the index page
+/**
+ * SPA fallback route
+ *
+ * For any route not matched by the server, serves the index.html file
+ * This enables client-side routing for the Single Page Application
+ */
 app.get('/*', (req, res) => {
     res.sendFile(path.join(__dirname, '../frontend/index.html'));
 });
 
-// Test database connection before starting server
+/**
+ * Server startup function
+ *
+ * Tests the database connection before starting the server
+ * If database connection fails, the server will not start
+ */
 const startServer = async () => {
     const dbConnected = await db.testConnection();
 
@@ -48,7 +93,7 @@ const startServer = async () => {
         process.exit(1);
     }
 
-    // Start server
+    // Start server if database connection successful
     app.listen(PORT, () => {
         console.log(`Server running on port ${PORT}`);
         console.log(`Visit http://localhost:${PORT} to access the application`);
@@ -58,7 +103,12 @@ const startServer = async () => {
 
 startServer();
 
-// Handle unhandled errors
+/**
+ * Global error handlers
+ *
+ * Catch unhandled exceptions and promise rejections
+ * Prevents the server from crashing silently due to uncaught errors
+ */
 process.on('uncaughtException', (error) => {
     console.error('Uncaught exception:', error);
 });

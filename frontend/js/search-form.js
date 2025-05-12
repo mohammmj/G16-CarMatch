@@ -1,7 +1,14 @@
 // frontend/js/search-form.js
+
+
+/**
+ * CarMatch Search From Handler
+ *
+ * This Script manages the car search from.
+ * It handles form field population, validation, and submission to the search results page.
+ */
 document.addEventListener('DOMContentLoaded', function() {
-    // Form elements
-    const searchForm = document.getElementById('carSearchForm');
+    // Form elements from different forms
     const brandSelect = document.getElementById('brand');
     const modelSelect = document.getElementById('model');
     const modelHelp = document.getElementById('model-help');
@@ -12,10 +19,11 @@ document.addEventListener('DOMContentLoaded', function() {
     const seatsInput = document.getElementById('seats');
     const fuelTypeSelect = document.getElementById('fuelType');
     const engineTypeSelect = document.getElementById('engineType');
-    const resetButton = document.getElementById('resetButton');
-    const searchButton = document.getElementById('searchButton');
-    const formFeedback = document.getElementById('form-feedback');
     const formError = document.getElementById('form-error');
+
+    // Buttons
+    const resetButton = document.querySelector('#btn .btn-danger');
+    const searchButton = document.querySelector('#btn .btn-success');
 
     // Hardcoded brands, models, and years (matching our hardcoded car data)
     const brands = ['BMW'];
@@ -23,10 +31,13 @@ document.addEventListener('DOMContentLoaded', function() {
         'BMW': ['3 Series 330i', '5 Series 540i', 'X5 xDrive40i', 'i4 M50', 'M3 Competition'],
     };
     const years = [2023, 2022, 2021, 2020, 2019];
-    const fuelTypes = ['Petrol', 'Diesel', 'Electric', 'Hybrid'];
-    const engineTypes = ['2.0L I4 Turbo', '3.0L I6 Turbo', '3.0L I6 Twin Turbo', 'Dual Electric Motor', 'Hybrid Powertrain'];
 
-    // Populate dropdown options
+    /**
+     * Populates the brand dropdown with available car brands
+     *
+     * Iterates through the brands array and creates an option element
+     * for each brand, adding it to the brand dropdown.
+     */
     function populateBrands() {
         brands.forEach(brand => {
             const option = document.createElement('option');
@@ -36,6 +47,12 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
+    /**
+     * Populates the year dropdown with available model years
+     *
+     * Iterates through the years array and creates an option element
+     * for each year, adding it to the year dropdown.
+     */
     function populateYears() {
         years.forEach(year => {
             const option = document.createElement('option');
@@ -45,6 +62,14 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
+    /**
+     * Populates the model dropdown based on the selected brand
+     *
+     * @param {string} brand - The selected car brand
+     *
+     * Clears existing model options and adds new ones based on the
+     * selected brand. Disables the dropdown if no brand is selected.
+     */
     function populateModels(brand) {
         // Clear current options except the first one
         modelSelect.innerHTML = '<option value="">Select Model</option>';
@@ -67,25 +92,15 @@ document.addEventListener('DOMContentLoaded', function() {
         modelHelp.style.display = 'none';
     }
 
-    function populateFuelTypes() {
-        fuelTypes.forEach(type => {
-            const option = document.createElement('option');
-            option.value = type;
-            option.textContent = type;
-            fuelTypeSelect.appendChild(option);
-        });
-    }
-
-    function populateEngineTypes() {
-        engineTypes.forEach(type => {
-            const option = document.createElement('option');
-            option.value = type;
-            option.textContent = type;
-            engineTypeSelect.appendChild(option);
-        });
-    }
-
-    // Validate a field
+    /**
+     * Validates a form field
+     *
+     * @param {HTMLElement} field - The input element to validate
+     * @returns {boolean} - True if field is valid, false otherwise
+     *
+     * Applies validation rules based on the field ID and updates
+     * error messages.
+     */
     function validateField(field) {
         let isValid = true;
 
@@ -136,7 +151,14 @@ document.addEventListener('DOMContentLoaded', function() {
         return isValid;
     }
 
-    // Validate the entire form
+    /**
+     * Validates the entire form before submission
+     *
+     * @returns {boolean} - True if form is valid, false otherwise
+     *
+     * Checks all required validations and ensures at least one
+     * search criteria is provided.
+     */
     function validateForm() {
         let isValid = true;
 
@@ -159,15 +181,19 @@ document.addEventListener('DOMContentLoaded', function() {
         return isValid;
     }
 
-    // Handle form submission
+    /**
+     * Handles the search form submission
+     *
+     * @param {Event} event - The form submission event
+     *
+     * Validates form, collects data from all three forms,
+     * and redirects to search results with parameters.
+     */
     function handleSubmit(event) {
-        event.preventDefault();
-
-        formFeedback.style.display = 'none';
+        if (event) event.preventDefault();
 
         if (!validateForm()) {
-            formFeedback.textContent = 'Please correct the errors in the form';
-            formFeedback.style.display = 'block';
+            alert('Please correct the errors in the form');
             return;
         }
 
@@ -198,12 +224,26 @@ document.addEventListener('DOMContentLoaded', function() {
             urlParams.append(key, value);
         });
 
-        window.location.href = `search-results.html?${urlParams.toString()}`;
+        window.location.href = `search_results.html?${urlParams.toString()}`;
     }
 
-    // Reset the form
+    /**
+     * Resets all form fields to their default state
+     *
+     * Clears all input values, error messages, and resets
+     * dependent dropdown state.
+     */
     function resetForm() {
-        searchForm.reset();
+        // Reset all form fields manually
+        brandSelect.value = '';
+        modelSelect.value = '';
+        yearSelect.value = '';
+        horsepowerInput.value = '';
+        minPriceInput.value = '';
+        maxPriceInput.value = '';
+        seatsInput.value = '';
+        fuelTypeSelect.value = '';
+        engineTypeSelect.value = '';
 
         // Clear all error messages
         document.getElementById('horsepower-error').textContent = '';
@@ -211,7 +251,6 @@ document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('maxPrice-error').textContent = '';
         document.getElementById('seats-error').textContent = '';
         formError.textContent = '';
-        formFeedback.style.display = 'none';
 
         // Reset model dropdown
         modelSelect.innerHTML = '<option value="">Select Model</option>';
@@ -219,12 +258,15 @@ document.addEventListener('DOMContentLoaded', function() {
         modelHelp.style.display = 'block';
     }
 
-    // Initialize the form
+    /**
+     * Initializes the form when the page loads
+     *
+     * Sets up all event listeners, populates dropdowns, and
+     * handles URL parameters if returning from results page.
+     */
     function init() {
         populateBrands();
         populateYears();
-        populateFuelTypes();
-        populateEngineTypes();
 
         // Set up event listeners
         brandSelect.addEventListener('change', () => populateModels(brandSelect.value));
@@ -242,8 +284,13 @@ document.addEventListener('DOMContentLoaded', function() {
         seatsInput.addEventListener('input', () => validateField(seatsInput));
 
         // Form submission and reset
-        searchForm.addEventListener('submit', handleSubmit);
         resetButton.addEventListener('click', resetForm);
+
+        // Fix the search button to use our handler instead of just following the href
+        searchButton.addEventListener('click', handleSubmit);
+        searchButton.querySelector('a').addEventListener('click', function(e) {
+            e.preventDefault(); // Prevent the default link behavior
+        });
 
         // Check for URL parameters (for when returning from results page)
         const urlParams = new URLSearchParams(window.location.search);
@@ -268,6 +315,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // Start initialization
+    // Start initialization when page loads
     init();
 });
