@@ -95,39 +95,8 @@
             <p>&copy; 2025 CarMatch.</p>
         </footer>
 
-        <script>
-            document.addEventListener('DOMContentLoaded', function () {
-            // Validera lösenords-matchning
-            var pwd = document.getElementById('password');
-            var pwd2 = document.getElementById('passwordConfirm');
-            var pwd2Feedback = document.getElementById('passwordConfirmFeedback');
-
-            function validatePasswordMatch() {
-                if (pwd.value !== pwd2.value) {
-                pwd2.setCustomValidity('Lösenordet matchar inte');
-                } else {
-                pwd2.setCustomValidity('');
-                }
-            }
-
-            pwd.addEventListener('input', validatePasswordMatch);
-            pwd2.addEventListener('input', validatePasswordMatch);
-
-            // Bootstrap validering
-            var forms = document.querySelectorAll('.needs-validation');
-
-            Array.prototype.slice.call(forms).forEach(function (form) {
-                form.addEventListener('submit', function (event) {
-                if (!form.checkValidity()) {
-                    event.preventDefault();
-                    event.stopPropagation();
-                }
-                form.classList.add('was-validated');
-                }, false);
-            });
-            });
-        </script> <!--måste fixas-->
-
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js" integrity="sha384-QNV4Wx0F+4NJF4KF2Xb/3LrXbNUJ2bx8Z2TlmGvnYWvlx1qJ8Hn2iQXZef1SXQX3" crossorigin="anonymous"></script>
+        <script src="js/register.js"></script>
+        <script src="js/nav-auth.js"></script>
     </body>
 </html>

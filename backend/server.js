@@ -1,4 +1,4 @@
-// backend/server.js
+// Updated backend/server.js
 
 /**
  * CarMatch Server Application
@@ -8,6 +8,7 @@
  *
  * Features:
  * - API endpoints for car search
+ * - API endpoints for user authentication
  * - Static file serving
  * - CORS support for development
  * - Error handling
@@ -18,6 +19,7 @@ const path = require('path');
 const cors = require('cors');
 const db = require('./config/db');
 const searchRoutes = require('./routes/searchRoutes');
+const authRoutes = require('./routes/authRoutes');
 
 // Initialize Express app
 const app = express();
@@ -57,10 +59,12 @@ app.use(express.urlencoded({ extended: true }));
 /**
  * API Routes
  *
- * Mounts the search routes module at the /api/search endpoint
- * All car search functionality is accessible through this path
+ * Mounts all API route modules at their respective endpoints:
+ * - /api/search for car search functionality
+ * - /api/auth for user authentication
  */
 app.use('/api/search', searchRoutes);
+app.use('/api/auth', authRoutes);
 
 /**
  * Static file serving
@@ -98,6 +102,7 @@ const startServer = async () => {
         console.log(`Server running on port ${PORT}`);
         console.log(`Visit http://localhost:${PORT} to access the application`);
         console.log(`API available at http://localhost:${PORT}/api/search`);
+        console.log(`Authentication API available at http://localhost:${PORT}/api/auth`);
     });
 };
 
