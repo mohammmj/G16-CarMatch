@@ -69,7 +69,7 @@ app.use('/api/auth', authRoutes);
 /**
  * Static file serving
  *
- * Serves frontend files from the frontend directory
+ * Serves frontend files
  */
 app.use(express.static(path.join(__dirname, '../frontend')));
 
@@ -101,7 +101,7 @@ const startServer = async () => {
     app.listen(PORT, () => {
         console.log(`Server running on port ${PORT}`);
         console.log(`Visit http://localhost:${PORT} to access the application`);
-        console.log(`API available at http://localhost:${PORT}/api/search`);
+        console.log(`Car Search API available at http://localhost:${PORT}/api/search`);
         console.log(`Authentication API available at http://localhost:${PORT}/api/auth`);
     });
 };

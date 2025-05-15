@@ -45,7 +45,7 @@ router.get('/', async (req, res) => {
         } = req.query;
 
         // Build the SQL query to return ALL cars
-        // Note: Currently we're fetching all cars and filtering in memory
+        // Note: Currently we're fetching all cars
         let query = `SELECT * FROM cars`;
         const queryParams = [];
 
@@ -56,7 +56,7 @@ router.get('/', async (req, res) => {
          * Calculate match percentage for each car based on search criteria
          *
          * The algorithm works by:
-         * 1. Assigning weights to different criteria (total 100%)
+         * 1. weights to different criteria (total 100%)
          * 2. how well each car matches each provided criterion
          * 3. Calculating a weighted score based on the matches
          * 4. Converting the score to a percentage
