@@ -458,7 +458,7 @@
   flex-direction: column;
   gap: 1rem;
   width: 100%;
-  max-width: 350px;
+  max-width: 500px;
   background: #f8f9fa;;
   padding: 2rem;
   border-radius: var(--border-radius);
@@ -485,3 +485,9 @@
 }
 
 
+/* ================================================================== */
+#profil_gubbe{
+width: 100%;
+max-width: 200px;
+margin: auto;
+}
