@@ -34,6 +34,7 @@
     align-items: center;
     padding: 0 10%;
     height: 70px;
+    z-index: 1000;
   }
   
   header a {
@@ -127,7 +128,7 @@
     grid-column: 1 / -1;
     grid-row: 3;
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr;
     align-items: end;
   }
   
