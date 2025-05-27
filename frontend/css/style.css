@@ -78,7 +78,10 @@
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     margin: 2rem 10%;
   }
-  
+  #index_main{
+    gap: 1.5rem;
+    padding: 2rem;
+  }
   main > h2 {
     grid-column: 1 / -1;
     grid-row: 1;
