@@ -6,6 +6,7 @@
  * This script manages the navigation bar elements based on user authentication status:
  * - Shows login/register links for unauthenticated users
  * - Shows logout and user-specific links for authenticated users
+ * - Handles profile page navigation
  */
 document.addEventListener('DOMContentLoaded', function() {
     // Navigation elements
@@ -44,11 +45,17 @@ document.addEventListener('DOMContentLoaded', function() {
         // Add back the Home link
         navList.appendChild(homeLink);
 
-        // Add username display
+        // Add username display with profile link
         const usernameLi = document.createElement('li');
         const usernameLink = document.createElement('a');
-        usernameLink.href = '#';
+        usernameLink.href = 'profile.html';
         usernameLink.textContent = `Welcome, ${user.username}`;
+        usernameLink.title = 'View Profile';
+        usernameLink.style.cursor = 'pointer';
+
+        // Add click handler for profile navigation
+        usernameLink.addEventListener('click', handleProfileClick);
+
         usernameLi.appendChild(usernameLink);
         navList.appendChild(usernameLi);
 
@@ -63,6 +70,31 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     /**
+     * Handles profile link click
+     *
+     * @param {Event} event - The click event
+     */
+    function handleProfileClick(event) {
+        console.log('Profile link clicked');
+        event.preventDefault();
+
+        // Check if user is still logged in
+        const currentUser = localStorage.getItem('carMatchUser');
+        console.log('Current user data:', currentUser);
+
+        if (!currentUser) {
+            console.log('No user found, redirecting to login');
+            alert('Please log in to access your profile');
+            window.location.href = 'log_in.html';
+            return;
+        }
+
+        console.log('Navigating to profile page');
+        // Navigate to profile page
+        window.location.href = 'profile.html';
+    }
+
+    /**
      * Handles user logout
      *
      * @param {Event} event - The click event
@@ -70,11 +102,17 @@ document.addEventListener('DOMContentLoaded', function() {
     function handleLogout(event) {
         event.preventDefault();
 
-        // Clear user data from localStorage
-        localStorage.removeItem('carMatchUser');
+        // Confirm logout
+        if (confirm('Are you sure you want to log out?')) {
+            // Clear user data from localStorage
+            localStorage.removeItem('carMatchUser');
 
-        // Redirect to home page
-        window.location.href = 'index.html';
+            // Show logout message
+            alert('You have been logged out successfully');
+
+            // Redirect to home page
+            window.location.href = 'index.html';
+        }
     }
 
     /**
