@@ -181,6 +181,9 @@ document.addEventListener('DOMContentLoaded', function() {
         const selectedCheckboxes = document.querySelectorAll('.compare-checkbox:checked');
         const count = selectedCheckboxes.length;
 
+        console.log('Checkbox changed. Selected count:', count);
+        console.log('Selected car IDs:', Array.from(selectedCheckboxes).map(cb => cb.dataset.carId));
+
         // Update the count display
         selectedCount.textContent = count;
 
@@ -209,8 +212,14 @@ document.addEventListener('DOMContentLoaded', function() {
      * Redirects to the comparison page with selected car IDs
      * if at least 2 cars are selected.
      */
-    function handleCompareClick() {
+    function handleCompareClick(e) {
+        e.preventDefault(); // Prevent the default link behavior
+        e.stopPropagation(); // Stop event bubbling
+
+        console.log('Compare button clicked');
+
         const selectedCheckboxes = document.querySelectorAll('.compare-checkbox:checked');
+        console.log('Selected checkboxes:', selectedCheckboxes.length);
 
         if (selectedCheckboxes.length < 2) {
             alert('Please select at least 2 cars to compare');
@@ -218,9 +227,12 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         const carIds = Array.from(selectedCheckboxes).map(cb => cb.dataset.carId);
+        console.log('Car IDs to compare:', carIds);
 
         // Redirect to comparison page
-        window.location.href = `car-comparison.html?cars=${carIds.join(',')}`;
+        const comparisonUrl = `comp.html?cars=${carIds.join(',')}`;
+        console.log('Redirecting to:', comparisonUrl);
+        window.location.href = comparisonUrl;
     }
 
     /**
@@ -343,7 +355,16 @@ document.addEventListener('DOMContentLoaded', function() {
         });
 
         retryButton.addEventListener('click', fetchResults);
+
+        // Handle compare button
         compareButton.addEventListener('click', handleCompareClick);
+
+        // handle the link inside the compare button
+        const compareLink = compareButton.querySelector('a');
+        if (compareLink) {
+            compareLink.addEventListener('click', handleCompareClick);
+        }
+
         clearSelectionButton.addEventListener('click', clearSelection);
 
         // Fetch results
