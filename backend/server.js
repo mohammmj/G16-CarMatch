@@ -10,6 +10,7 @@
  * - API endpoints for car search
  * - API endpoints for user authentication
  * - API endpoints for user profile management
+ * - API endpoints for favorites management
  * - Static file serving
  * - CORS support for development
  * - Error handling
@@ -22,6 +23,7 @@ const db = require('./config/db');
 const searchRoutes = require('./routes/searchRoutes');
 const authRoutes = require('./routes/authRoutes');
 const profileRoutes = require('./routes/profileRoutes');
+const favoritesRoutes = require('./routes/favoritesRoutes');
 
 // Initialize Express app
 const app = express();
@@ -64,10 +66,12 @@ app.use(express.urlencoded({ extended: true }));
  * Mounts all API route modules at their respective endpoints:
  * - /api/search for car search functionality
  * - /api/auth for user authentication and profile management
+ * - /api/favorites for favorites management
  */
 app.use('/api/search', searchRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/auth', profileRoutes); // Profile routes are also under /api/auth
+app.use('/api/favorites', favoritesRoutes); // New favorites routes
 
 /**
  * Static file serving
@@ -107,6 +111,7 @@ const startServer = async () => {
         console.log(`Car Search API available at http://localhost:${PORT}/api/search`);
         console.log(`Authentication API available at http://localhost:${PORT}/api/auth`);
         console.log(`Profile API available at http://localhost:${PORT}/api/auth/profile`);
+        console.log(`Favorites API available at http://localhost:${PORT}/api/favorites`);
     });
 };
 

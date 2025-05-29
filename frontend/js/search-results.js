@@ -1,6 +1,5 @@
 // frontend/js/search-results.js
 
-
 /**
  * CarMatch Search Results Handler
  *
@@ -9,6 +8,7 @@
  * - Fetches search results from API (with fallback)
  * - Creates and manages car cards from search results
  * - Handles car comparison selection
+ * - Manages favorites functionality
  */
 document.addEventListener('DOMContentLoaded', function() {
     // Elements
@@ -27,9 +27,12 @@ document.addEventListener('DOMContentLoaded', function() {
     const carList = document.getElementById('car-list');
     const carCardTemplate = document.getElementById('car-card-template');
 
-    // API endpoint base URL
+    // API endpoint base URLs
     const API_BASE_URL = 'http://localhost:3000/api/search';
+    const FAVORITES_API_URL = 'http://localhost:3000/api/favorites';
 
+    // Current user data
+    let currentUser = null;
 
     // Get search parameters from URL
     const urlParams = new URLSearchParams(window.location.search);
@@ -45,10 +48,24 @@ document.addEventListener('DOMContentLoaded', function() {
     console.log('Search parameters from URL:', searchParams);
 
     /**
+     * Check if user is logged in
+     */
+    function checkUserLogin() {
+        const userData = localStorage.getItem('carMatchUser');
+        if (userData) {
+            try {
+                currentUser = JSON.parse(userData);
+                return true;
+            } catch (error) {
+                console.error('Error parsing user data:', error);
+                return false;
+            }
+        }
+        return false;
+    }
+
+    /**
      * Displays the search parameters in the header
-     *
-     * Creates visual tags for each search parameter with
-     * formatted labels and values.
      */
     function displaySearchParams() {
         // Clear existing parameters
@@ -88,22 +105,114 @@ document.addEventListener('DOMContentLoaded', function() {
 
     /**
      * Formats a car price with proper currency formatting
-     *
-     * @param {number} price - The raw price value
-     * @returns {string} - Formatted price with currency symbol and commas
      */
     function formatPrice(price) {
         return `$${parseFloat(price).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
     }
 
     /**
+     * Toggles favorite status for a car
+     */
+    async function toggleFavorite(carId, favoriteButton) {
+        if (!currentUser) {
+            alert('Please log in to manage favorites');
+            window.location.href = 'log_in.html';
+            return;
+        }
+
+        const icon = favoriteButton.querySelector('.favorite-icon');
+        const isFavorited = favoriteButton.classList.contains('favorited');
+
+        try {
+            let response;
+
+            if (isFavorited) {
+                // Remove from favorites
+                response = await fetch(`${FAVORITES_API_URL}/${carId}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Authorization': `Bearer ${currentUser.id}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+            } else {
+                // Add to favorites
+                response = await fetch(FAVORITES_API_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${currentUser.id}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ carId: carId })
+                });
+            }
+
+            const data = await response.json();
+
+            if (response.ok) {
+                // Update UI
+                if (isFavorited) {
+                    favoriteButton.classList.remove('favorited');
+                    icon.textContent = '☆';
+                    favoriteButton.title = 'Add to favorites';
+                } else {
+                    favoriteButton.classList.add('favorited');
+                    icon.textContent = '★';
+                    favoriteButton.title = 'Remove from favorites';
+                }
+                console.log(data.message);
+            } else {
+                alert(data.message || 'Failed to update favorites');
+            }
+        } catch (error) {
+            console.error('Error toggling favorite:', error);
+            alert('An error occurred while updating favorites');
+        }
+    }
+
+    /**
+     * Checks if cars are favorited and updates UI accordingly
+     */
+    async function checkFavoritedCars(carIds) {
+        if (!currentUser || carIds.length === 0) {
+            return;
+        }
+
+        try {
+            // Get user's favorites
+            const response = await fetch(FAVORITES_API_URL, {
+                headers: {
+                    'Authorization': `Bearer ${currentUser.id}`,
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                const favoritedCarIds = data.favorites.map(fav => fav.car_id.toString());
+
+                // Update favorite buttons
+                carIds.forEach(carId => {
+                    if (favoritedCarIds.includes(carId.toString())) {
+                        const favoriteButton = document.querySelector(`[data-car-id="${carId}"] .favorite-button`);
+                        if (favoriteButton) {
+                            favoriteButton.classList.add('favorited');
+                            const icon = favoriteButton.querySelector('.favorite-icon');
+                            if (icon) {
+                                icon.textContent = '★';
+                                favoriteButton.title = 'Remove from favorites';
+                            }
+                        }
+                    }
+                });
+            }
+        } catch (error) {
+            console.error('Error checking favorited cars:', error);
+        }
+    }
+
+    /**
      * Creates a car card from the HTML template and car data
-     *
-     * @param {Object} car - The car data object
-     * @returns {HTMLElement} - The populated car card DOM element
-     *
-     * Creates a complete car card with all car details and
-     * sets up event listeners for interactions.
      */
     function createCarCard(car) {
         console.log('Creating card for car:', car);
@@ -154,12 +263,14 @@ document.addEventListener('DOMContentLoaded', function() {
             const detailsLink = cardNode.querySelector('.details-button');
             detailsLink.href = `car-details.html?id=${car.id}`;
 
-            // Set favorite button
+            // Set favorite button with car ID data attribute
             const favoriteButton = cardNode.querySelector('.favorite-button');
+            const cardWrapper = cardNode.querySelector('.car-card-wrapper');
+            cardWrapper.dataset.carId = car.id; // Add car ID to wrapper for easier selection
+
             favoriteButton.addEventListener('click', function(e) {
                 e.preventDefault();
-                // This would normally check if user is logged in and toggle favorite status
-                alert('Please log in to save favorites');
+                toggleFavorite(car.id, favoriteButton);
             });
 
             return cardNode;
@@ -171,11 +282,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
     /**
      * Handles car comparison checkbox changes
-     *
-     * @param {Event} e - The checkbox change event
-     *
-     * Updates comparison counter and manages checkbox states based
-     * on the number of selected cars (limiting to max 3).
      */
     function handleCompareCheckbox(e) {
         const selectedCheckboxes = document.querySelectorAll('.compare-checkbox:checked');
@@ -208,13 +314,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
     /**
      * Handles the compare button click event
-     *
-     * Redirects to the comparison page with selected car IDs
-     * if at least 2 cars are selected.
      */
     function handleCompareClick(e) {
-        e.preventDefault(); // Prevent the default link behavior
-        e.stopPropagation(); // Stop event bubbling
+        e.preventDefault();
+        e.stopPropagation();
 
         console.log('Compare button clicked');
 
@@ -237,9 +340,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
     /**
      * Clears all selected comparison checkboxes
-     *
-     * Resets the comparison selection state, enabling all
-     * checkboxes and hiding the comparison actions.
      */
     function clearSelection() {
         document.querySelectorAll('.compare-checkbox:checked').forEach(cb => {
@@ -256,11 +356,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
     /**
      * Displays car search results on the page
-     *
-     * @param {Array} cars - Array of car objects to display
-     *
-     * Creates and appends car cards for each result, or displays
-     * a message if no results are found.
      */
     function displayCarResults(cars) {
         // Hide loading state
@@ -286,6 +381,12 @@ document.addEventListener('DOMContentLoaded', function() {
                 const cardElement = createCarCard(car);
                 carList.appendChild(cardElement);
             });
+
+            // Check which cars are favorited (if user is logged in)
+            if (currentUser) {
+                const carIds = cars.map(car => car.id);
+                checkFavoritedCars(carIds);
+            }
         }
 
         // Show results section
@@ -294,8 +395,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
     /**
      * Fetches car results from the API
-     *
-     * Attempts to get search results from the API endpoint
      */
     async function fetchResults() {
         console.log('Starting fetchResults function');
@@ -339,12 +438,12 @@ document.addEventListener('DOMContentLoaded', function() {
 
     /**
      * Initializes the search results page
-     *
-     * Sets up event listeners, displays search parameters,
-     * and fetches search results.
      */
     function init() {
         console.log('Initializing search results page');
+
+        // Check if user is logged in
+        checkUserLogin();
 
         // Display search parameters
         displaySearchParams();

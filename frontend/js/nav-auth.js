@@ -7,6 +7,7 @@
  * - Shows login/register links for unauthenticated users
  * - Shows logout and user-specific links for authenticated users
  * - Handles profile page navigation
+ * - Adds favorites link for logged in users
  */
 document.addEventListener('DOMContentLoaded', function() {
     // Navigation elements
@@ -44,6 +45,15 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Add back the Home link
         navList.appendChild(homeLink);
+
+        // Add favorites link
+        const favoritesLi = document.createElement('li');
+        const favoritesLink = document.createElement('a');
+        favoritesLink.href = 'favorites.html';
+        favoritesLink.textContent = 'My Favorites';
+        favoritesLink.title = 'View Favorite Cars';
+        favoritesLi.appendChild(favoritesLink);
+        navList.appendChild(favoritesLi);
 
         // Add username display with profile link
         const usernameLi = document.createElement('li');

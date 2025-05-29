@@ -21,14 +21,35 @@ document.addEventListener('DOMContentLoaded', function() {
     const tableHeader = document.getElementById('table-header');
     const tableBody = document.getElementById('table-body');
 
-    // API endpoint
+    // API endpoints
     const API_BASE_URL = 'http://localhost:3000/api/search';
+    const FAVORITES_API_URL = 'http://localhost:3000/api/favorites';
+
+    // Current user data
+    let currentUser = null;
 
     // Get car IDs from URL parameters
     const urlParams = new URLSearchParams(window.location.search);
     const carIds = urlParams.get('cars') ? urlParams.get('cars').split(',') : [];
 
     console.log('Car IDs to compare:', carIds);
+
+    /**
+     * Check if user is logged in
+     */
+    function checkUserLogin() {
+        const userData = localStorage.getItem('carMatchUser');
+        if (userData) {
+            try {
+                currentUser = JSON.parse(userData);
+                return true;
+            } catch (error) {
+                console.error('Error parsing user data:', error);
+                return false;
+            }
+        }
+        return false;
+    }
 
     /**
      * Formats a car price with proper currency formatting
@@ -58,6 +79,107 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         return `<span class="match-badge ${badgeClass}">${matchPercentage}% Match</span>`;
+    }
+
+    /**
+     * Toggles favorite status for a car
+     */
+    async function toggleFavorite(carId, favoriteButton) {
+        if (!currentUser) {
+            alert('Please log in to manage favorites');
+            window.location.href = 'log_in.html';
+            return;
+        }
+
+        const icon = favoriteButton.querySelector('.favorite-icon');
+        const isFavorited = favoriteButton.classList.contains('favorited');
+
+        try {
+            let response;
+
+            if (isFavorited) {
+                // Remove from favorites
+                response = await fetch(`${FAVORITES_API_URL}/${carId}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Authorization': `Bearer ${currentUser.id}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+            } else {
+                // Add to favorites
+                response = await fetch(FAVORITES_API_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${currentUser.id}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ carId: carId })
+                });
+            }
+
+            const data = await response.json();
+
+            if (response.ok) {
+                // Update UI
+                if (isFavorited) {
+                    favoriteButton.classList.remove('favorited');
+                    icon.textContent = '☆';
+                    favoriteButton.innerHTML = '<span class="favorite-icon">☆</span> Add to Favorites';
+                } else {
+                    favoriteButton.classList.add('favorited');
+                    icon.textContent = '★';
+                    favoriteButton.innerHTML = '<span class="favorite-icon">★</span> Remove from Favorites';
+                }
+                console.log(data.message);
+            } else {
+                alert(data.message || 'Failed to update favorites');
+            }
+        } catch (error) {
+            console.error('Error toggling favorite:', error);
+            alert('An error occurred while updating favorites');
+        }
+    }
+
+    /**
+     * Checks which cars are favorited and updates UI accordingly
+     */
+    async function checkFavoritedCars(carIds) {
+        if (!currentUser || carIds.length === 0) {
+            return;
+        }
+
+        try {
+            // Get user's favorites
+            const response = await fetch(FAVORITES_API_URL, {
+                headers: {
+                    'Authorization': `Bearer ${currentUser.id}`,
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                const favoritedCarIds = data.favorites.map(fav => fav.car_id.toString());
+
+                // Update favorite buttons
+                carIds.forEach(carId => {
+                    if (favoritedCarIds.includes(carId.toString())) {
+                        const favoriteButton = document.querySelector(`[data-car-id="${carId}"]`);
+                        if (favoriteButton) {
+                            favoriteButton.classList.add('favorited');
+                            const icon = favoriteButton.querySelector('.favorite-icon');
+                            if (icon) {
+                                icon.textContent = '★';
+                                favoriteButton.innerHTML = '<span class="favorite-icon">★</span> Remove from Favorites';
+                            }
+                        }
+                    }
+                });
+            }
+        } catch (error) {
+            console.error('Error checking favorited cars:', error);
+        }
     }
 
     /**
@@ -121,11 +243,18 @@ document.addEventListener('DOMContentLoaded', function() {
             {
                 label: 'Favorite',
                 key: 'favorite',
-                format: (value, car) => `
-                    <button class="favorite-btn" data-car-id="${car.id}" onclick="toggleFavorite(${car.id})">
-                        <span class="favorite-icon">☆</span> Add to Favorites
-                    </button>
-                `
+                format: (value, car) => {
+                    if (!currentUser) {
+                        return `<button class="favorite-btn" onclick="alert('Please log in to manage favorites')">
+                            <span class="favorite-icon">☆</span> Login to Favorite
+                        </button>`;
+                    }
+                    return `
+                        <button class="favorite-btn" data-car-id="${car.id}" onclick="handleFavoriteClick(${car.id}, this)">
+                            <span class="favorite-icon">☆</span> Add to Favorites
+                        </button>
+                    `;
+                }
             }
         ];
 
@@ -155,41 +284,20 @@ document.addEventListener('DOMContentLoaded', function() {
 
             tableBody.appendChild(row);
         });
+
+        // Check favorited status if user is logged in
+        if (currentUser) {
+            const carIds = cars.map(car => car.id);
+            checkFavoritedCars(carIds);
+        }
     }
 
     /**
-     * Toggles favorite status for a car
-     * This is a global function that can be called from onclick handlers
-     *
-     * @param {number} carId - The ID of the car to toggle
+     * Global function to handle favorite clicks from table
+     * This is needed because the buttons are created dynamically
      */
-    window.toggleFavorite = function(carId) {
-        const currentUser = localStorage.getItem('carMatchUser');
-
-        if (!currentUser) {
-            alert('Please log in to manage favorites');
-            return;
-        }
-
-        const button = document.querySelector(`[data-car-id="${carId}"]`);
-        const icon = button.querySelector('.favorite-icon');
-
-        if (button.classList.contains('favorited')) {
-            // Remove from favorites
-            button.classList.remove('favorited');
-            icon.textContent = '☆';
-            button.innerHTML = '<span class="favorite-icon">☆</span> Add to Favorites';
-            console.log(`Removed car ${carId} from favorites`);
-        } else {
-            // Add to favorites
-            button.classList.add('favorited');
-            icon.textContent = '★';
-            button.innerHTML = '<span class="favorite-icon">★</span> Remove from Favorites';
-            console.log(`Added car ${carId} to favorites`);
-        }
-
-        // Here you would normally make an API call to save the favorite status
-        // For now, we'll just log it
+    window.handleFavoriteClick = function(carId, buttonElement) {
+        toggleFavorite(carId, buttonElement);
     };
 
     /**
@@ -302,6 +410,9 @@ document.addEventListener('DOMContentLoaded', function() {
         console.log('Initializing car comparison page');
         console.log('URL parameters:', window.location.search);
         console.log('Car IDs from URL:', carIds);
+
+        // Check if user is logged in
+        checkUserLogin();
 
         // Set up retry button
         retryButton.addEventListener('click', fetchCarsForComparison);
