@@ -4,7 +4,7 @@
  * CarMatch Car Comparison Handler
  *
  * This script manages the car comparison page functionality:
- * - Fetches car data for comparison from URL parameters
+ * - Gets car data from search results (stored in sessionStorage)
  * - Creates a side-by-side comparison table
  * - Handles loading states and error handling
  * - Manages favorite functionality
@@ -212,8 +212,8 @@ document.addEventListener('DOMContentLoaded', function() {
         const specifications = [
             {
                 label: 'Match Percentage',
-                key: 'matchpercentage',
-                format: (value) => getMatchBadge(value || 100)
+                key: 'matchPercentage',
+                format: (value) => getMatchBadge(value || 0)
             },
             {
                 label: 'Price',
@@ -324,6 +324,36 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Show comparison section
         comparisonSection.style.display = 'block';
+
+        // Update the back button with correct URL
+        updateBackButton();
+    }
+
+    /**
+     * Updates the back button to use the correct search results URL
+     */
+    function updateBackButton() {
+        const backButton = document.querySelector('.back-button');
+        if (backButton) {
+            backButton.href = getBackToSearchUrl();
+        }
+    }
+
+    /**
+     * Gets the back URL with original search parameters
+     */
+    function getBackToSearchUrl() {
+        // Try to get search parameters from sessionStorage first
+        const storedSearchParams = sessionStorage.getItem('originalSearchParams');
+
+        if (storedSearchParams) {
+            const searchParams = JSON.parse(storedSearchParams);
+            const urlParams = new URLSearchParams(searchParams);
+            return `search_results.html?${urlParams.toString()}`;
+        }
+
+        // Fallback to basic search results page
+        return 'search_results.html';
     }
 
     /**
@@ -338,7 +368,7 @@ document.addEventListener('DOMContentLoaded', function() {
             <h3>No Cars Selected for Comparison</h3>
             <p>Please go back to the search results and select cars to compare.</p>
             <div style="margin-top: 20px;">
-                <a href="search_results.html" class="back-button">
+                <a href="${getBackToSearchUrl()}" class="back-button">
                     ← Back to Search Results
                 </a>
             </div>
@@ -348,7 +378,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     /**
-     * Fetches car data from the API and filters by selected IDs
+     * Gets car data for comparison from sessionStorage or API fallback
      */
     async function fetchCarsForComparison() {
         console.log('Starting fetchCarsForComparison');
@@ -366,9 +396,34 @@ document.addEventListener('DOMContentLoaded', function() {
         comparisonSection.style.display = 'none';
 
         try {
-            console.log('Fetching all cars from API');
+            // First, try to get data from sessionStorage (from search results)
+            const storedCarsData = sessionStorage.getItem('comparisonCarsData');
 
-            // Fetch all cars from the API
+            if (storedCarsData) {
+                console.log('Found cars data in sessionStorage');
+                const selectedCars = JSON.parse(storedCarsData);
+
+                // Verify we have all the requested cars
+                const foundCarIds = selectedCars.map(car => car.id.toString());
+                const allCarsFound = carIds.every(id => foundCarIds.includes(id));
+
+                if (allCarsFound && selectedCars.length > 0) {
+                    console.log('Using cars data from sessionStorage with match percentages');
+                    console.log('Cars data:', selectedCars);
+
+                    // Order cars according to carIds order
+                    const orderedCars = carIds.map(id =>
+                        selectedCars.find(car => car.id.toString() === id)
+                    ).filter(car => car !== undefined);
+
+                    displayComparison(orderedCars);
+                    return;
+                }
+            }
+
+            console.log('No valid sessionStorage data found, fetching from API as fallback');
+
+            // Fallback: Fetch all cars from the API
             const response = await fetch(API_BASE_URL);
 
             if (!response.ok) {
@@ -384,13 +439,13 @@ document.addEventListener('DOMContentLoaded', function() {
             );
 
             console.log(`Found ${selectedCars.length} cars matching selected IDs`);
-            console.log('Selected cars:', selectedCars);
+            console.log('Selected cars (from API fallback):', selectedCars);
 
             if (selectedCars.length === 0) {
                 throw new Error('No cars found matching the selected IDs');
             }
 
-            // Display the comparison
+            // Display the comparison (note: these will have default 100% match from API)
             displayComparison(selectedCars);
 
         } catch (error) {
@@ -416,6 +471,12 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Set up retry button
         retryButton.addEventListener('click', fetchCarsForComparison);
+
+        // Update back button to use correct URL
+        const backButton = document.querySelector('.back-button');
+        if (backButton) {
+            backButton.href = getBackToSearchUrl();
+        }
 
         // Fetch and display cars
         fetchCarsForComparison();

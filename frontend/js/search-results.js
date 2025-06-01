@@ -31,8 +31,9 @@ document.addEventListener('DOMContentLoaded', function() {
     const API_BASE_URL = 'http://localhost:3000/api/search';
     const FAVORITES_API_URL = 'http://localhost:3000/api/favorites';
 
-    // Current user data
+    // Current user data and search results
     let currentUser = null;
+    let searchResultsData = []; // Store the search results with match percentages
 
     // Get search parameters from URL
     const urlParams = new URLSearchParams(window.location.search);
@@ -332,6 +333,19 @@ document.addEventListener('DOMContentLoaded', function() {
         const carIds = Array.from(selectedCheckboxes).map(cb => cb.dataset.carId);
         console.log('Car IDs to compare:', carIds);
 
+        // Store the current search results data with match percentages for comparison page
+        const selectedCarsData = searchResultsData.filter(car =>
+            carIds.includes(car.id.toString())
+        );
+
+        console.log('Selected cars data with match percentages:', selectedCarsData);
+
+        // Store in sessionStorage so comparison page can access it
+        sessionStorage.setItem('comparisonCarsData', JSON.stringify(selectedCarsData));
+
+        // Also store the original search parameters so we can return to the same search
+        sessionStorage.setItem('originalSearchParams', JSON.stringify(searchParams));
+
         // Redirect to comparison page
         const comparisonUrl = `comp.html?cars=${carIds.join(',')}`;
         console.log('Redirecting to:', comparisonUrl);
@@ -358,6 +372,9 @@ document.addEventListener('DOMContentLoaded', function() {
      * Displays car search results on the page
      */
     function displayCarResults(cars) {
+        // Store the search results data for later use in comparison
+        searchResultsData = cars;
+
         // Hide loading state
         loadingContainer.style.display = 'none';
 
