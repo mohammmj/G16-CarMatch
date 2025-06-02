@@ -1,10 +1,9 @@
 // frontend/js/search-form.js
 
-
 /**
- * CarMatch Search From Handler
+ * CarMatch Search Form Handler
  *
- * This Script manages the car search from.
+ * This Script manages the car search form.
  * It handles form field population, validation, and submission to the search results page.
  */
 document.addEventListener('DOMContentLoaded', function() {
@@ -25,21 +24,50 @@ document.addEventListener('DOMContentLoaded', function() {
     const resetButton = document.querySelector('#btn .btn-danger');
     const searchButton = document.querySelector('#btn .btn-success');
 
-    // Hardcoded brands, models, and years (matching our hardcoded car data)
-    const brands = ['BMW'];
+    // Alla bilmärken och modeller från din SQL-data
+    const brands = [
+        'BMW', 'Audi', 'Mercedes-Benz', 'Volvo', 'Volkswagen',
+        'Porsche', 'Tesla', 'Toyota'
+    ];
+
     const modelsByBrand = {
-        'BMW': ['3 Series 330i', '5 Series 540i', 'X5 xDrive40i', 'i4 M50', 'M3 Competition'],
+        'BMW': [
+            '3 Series 330i', '5 Series 540i', 'X5 xDrive40i', 'i4 M50', 'M3 Competition',
+            'X3 xDrive30i', '7 Series 750i', 'iX xDrive50', 'Z4 sDrive30i', 'X7 xDrive40i'
+        ],
+        'Audi': [
+            'A4 Quattro', 'Q7 55 TFSI', 'e-tron GT', 'A6 Allroad', 'Q5 Sportback'
+        ],
+        'Mercedes-Benz': [
+            'C300 4MATIC', 'GLE 450', 'EQS 580', 'S580 4MATIC', 'AMG GT 63 S'
+        ],
+        'Volvo': [
+            'XC90 T6', 'XC40 Recharge', 'S90 T6', 'XC60 T8', 'V90 Cross Country'
+        ],
+        'Volkswagen': [
+            'Golf GTI', 'ID.4 Pro', 'Arteon R-Line', 'Atlas Cross Sport', 'Tiguan SEL'
+        ],
+        'Porsche': [
+            '911 Carrera', 'Taycan 4S', 'Cayenne Turbo', 'Panamera 4S', 'Macan GTS'
+        ],
+        'Tesla': [
+            'Model 3 Long Range', 'Model Y Performance', 'Model S Plaid', 'Model X Long Range', 'Cybertruck'
+        ],
+        'Toyota': [
+            'Prius Prime', 'Camry TRD', 'Highlander Hybrid', 'RAV4 Prime', 'Supra 3.0'
+        ]
     };
-    const years = [2023, 2022, 2021, 2020, 2019];
+
+    const years = [2023, 2022, 2021, 2020, 2019,2018,2017,2016,2015,2014];
 
     /**
      * Populates the brand dropdown with available car brands
-     *
-     * Iterates through the brands array and creates an option element
-     * for each brand, adding it to the brand dropdown.
      */
     function populateBrands() {
-        brands.forEach(brand => {
+        // Sortera märkena alfabetiskt
+        const sortedBrands = [...brands].sort();
+
+        sortedBrands.forEach(brand => {
             const option = document.createElement('option');
             option.value = brand;
             option.textContent = brand;
@@ -49,9 +77,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
     /**
      * Populates the year dropdown with available model years
-     *
-     * Iterates through the years array and creates an option element
-     * for each year, adding it to the year dropdown.
      */
     function populateYears() {
         years.forEach(year => {
@@ -66,9 +91,6 @@ document.addEventListener('DOMContentLoaded', function() {
      * Populates the model dropdown based on the selected brand
      *
      * @param {string} brand - The selected car brand
-     *
-     * Clears existing model options and adds new ones based on the
-     * selected brand. Disables the dropdown if no brand is selected.
      */
     function populateModels(brand) {
         // Clear current options except the first one
@@ -81,7 +103,11 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         const models = modelsByBrand[brand] || [];
-        models.forEach(model => {
+
+        // Sortera modellerna alfabetiskt
+        const sortedModels = [...models].sort();
+
+        sortedModels.forEach(model => {
             const option = document.createElement('option');
             option.value = model;
             option.textContent = model;
@@ -97,9 +123,6 @@ document.addEventListener('DOMContentLoaded', function() {
      *
      * @param {HTMLElement} field - The input element to validate
      * @returns {boolean} - True if field is valid, false otherwise
-     *
-     * Applies validation rules based on the field ID and updates
-     * error messages.
      */
     function validateField(field) {
         let isValid = true;
@@ -155,9 +178,6 @@ document.addEventListener('DOMContentLoaded', function() {
      * Validates the entire form before submission
      *
      * @returns {boolean} - True if form is valid, false otherwise
-     *
-     * Checks all required validations and ensures at least one
-     * search criteria is provided.
      */
     function validateForm() {
         let isValid = true;
@@ -185,9 +205,6 @@ document.addEventListener('DOMContentLoaded', function() {
      * Handles the search form submission
      *
      * @param {Event} event - The form submission event
-     *
-     * Validates form, collects data from all three forms,
-     * and redirects to search results with parameters.
      */
     function handleSubmit(event) {
         if (event) event.preventDefault();
@@ -229,9 +246,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
     /**
      * Resets all form fields to their default state
-     *
-     * Clears all input values, error messages, and resets
-     * dependent dropdown state.
      */
     function resetForm() {
         // Reset all form fields manually
@@ -260,9 +274,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
     /**
      * Initializes the form when the page loads
-     *
-     * Sets up all event listeners, populates dropdowns, and
-     * handles URL parameters if returning from results page.
      */
     function init() {
         populateBrands();
