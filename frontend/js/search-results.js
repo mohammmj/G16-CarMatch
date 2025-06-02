@@ -260,9 +260,13 @@ document.addEventListener('DOMContentLoaded', function() {
             // Set price
             cardNode.querySelector('.car-card-price').textContent = formatPrice(car.price);
 
-            // Set details link
+            // Set details link to redirect to Blocket search
             const detailsLink = cardNode.querySelector('.details-button');
-            detailsLink.href = `car-details.html?id=${car.id}`;
+            const searchQuery = `${car.brand} ${car.model}`.toLowerCase().replace(/\s+/g, '+');
+            detailsLink.href = `https://www.blocket.se/bilar/sok?q=${searchQuery}`;
+            detailsLink.target = '_blank'; // Open in new tab
+            detailsLink.rel = 'noopener noreferrer'; // Security best practice
+            detailsLink.textContent = 'Find on Blocket';
 
             // Set favorite button with car ID data attribute
             const favoriteButton = cardNode.querySelector('.favorite-button');

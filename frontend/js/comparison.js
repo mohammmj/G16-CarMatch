@@ -241,19 +241,35 @@ document.addEventListener('DOMContentLoaded', function() {
                 format: (value) => value || 'N/A'
             },
             {
+                label: 'Find on Blocket',
+                key: 'blocket',
+                format: (value, car) => {
+                    const searchQuery = `${car.brand} ${car.model}`.toLowerCase().replace(/\s+/g, '+');
+                    const blocketUrl = `https://www.blocket.se/bilar/sok?q=${searchQuery}`;
+
+                    return `
+                <a href="${blocketUrl}" target="_blank" rel="noopener noreferrer" 
+                   class="details-button"
+                   style="background-color: var(--accent-color); text-decoration: none; display: inline-block;">
+                    Find on Blocket
+                </a>
+            `;
+                }
+            },
+            {
                 label: 'Favorite',
                 key: 'favorite',
                 format: (value, car) => {
                     if (!currentUser) {
                         return `<button class="favorite-btn" onclick="alert('Please log in to manage favorites')">
-                            <span class="favorite-icon">☆</span> Login to Favorite
-                        </button>`;
+                    <span class="favorite-icon">☆</span> Login to Favorite
+                </button>`;
                     }
                     return `
-                        <button class="favorite-btn" data-car-id="${car.id}" onclick="handleFavoriteClick(${car.id}, this)">
-                            <span class="favorite-icon">☆</span> Add to Favorites
-                        </button>
-                    `;
+                <button class="favorite-btn" data-car-id="${car.id}" onclick="handleFavoriteClick(${car.id}, this)">
+                    <span class="favorite-icon">☆</span> Add to Favorites
+                </button>
+            `;
                 }
             }
         ];

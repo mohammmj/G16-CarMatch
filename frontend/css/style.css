@@ -364,14 +364,14 @@
   
   .details-button {
     padding: 8px 15px;
-    background-color: var(--secondary-color);
+    background-color: #dc3545;
     color: white;
     border-radius: var(--border-radius);
     font-size: 14px;
     transition: background-color var(--transition-speed);
   }
   
-  details-button:hover { background-color: #2980b9; color: white; }
+  details-button:hover { background-color:  #c82333; color: white; text-decoration: none;}
   
   .comparison-actions {
     display: flex;
