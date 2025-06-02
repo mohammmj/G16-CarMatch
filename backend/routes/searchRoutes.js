@@ -209,11 +209,17 @@ router.get('/', async (req, res) => {
             };
         });
 
+        // filter out cars with 0% match
+        const relevantCars = carsWithMatchPercentage.filter(car => car.matchPercentage > 0);
+
         // Sort by match percentage (highest first)
-        carsWithMatchPercentage.sort((a, b) => b.matchPercentage - a.matchPercentage);
+        relevantCars.sort((a, b) => b.matchPercentage - a.matchPercentage);
+
+        // Return only top 10 results or fewer if not provided ***
+        const top10Cars = relevantCars.slice(0, 10);
 
         // Return the results
-        res.json(carsWithMatchPercentage);
+        res.json(top10Cars);
 
     } catch (error) {
         console.error('Error searching for cars:', error);
