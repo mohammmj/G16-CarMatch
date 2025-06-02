@@ -224,7 +224,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
             // Set match percentage and color
             const matchBadge = cardNode.querySelector('.match-badge');
-            const matchValue = car.matchpercentage || car.matchPercentage || 100;
+            const matchValue = car.matchPercentage || 0;
             matchBadge.textContent = `${matchValue}% Match`;
 
             // Set badge color based on match percentage
