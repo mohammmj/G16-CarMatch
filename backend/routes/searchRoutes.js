@@ -5,6 +5,7 @@
  *
  * This module handles all car search-related API endpoints, including:
  * - Searching for cars based on user criteria with match percentage calculation
+ * - Getting all cars without filtering (for favorites page)
  *
  * The search algorithm assigns weights to different criteria and calculates
  * a match percentage to help users find their ideal vehicle.
@@ -26,6 +27,7 @@ const db = require('../config/db');
  * @param {number} [seats] - Minimum number of seats
  * @param {string} [fuelType] - Type of fuel
  * @param {string} [engineType] - Type of engine
+ * @param {string} [getAllCars] - If 'true', returns all cars without filtering (for favorites page)
  *
  * @returns {Object[]} - Array of cars with match percentages, sorted by match quality
  */
@@ -41,8 +43,17 @@ router.get('/', async (req, res) => {
             maxPrice,
             seats,
             fuelType,
-            engineType
+            engineType,
+            getAllCars
         } = req.query;
+
+        // Special case: Return all cars without filtering for favorites page
+        if (getAllCars === 'true') {
+            console.log('Fetching all cars without filtering for favorites page');
+            const query = 'SELECT * FROM cars ORDER BY id';
+            const result = await db.query(query);
+            return res.json(result.rows);
+        }
 
         // Build the SQL query to return ALL cars
         // Note: Currently we're fetching all cars

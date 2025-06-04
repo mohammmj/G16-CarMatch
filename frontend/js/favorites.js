@@ -23,7 +23,8 @@ document.addEventListener('DOMContentLoaded', function() {
     // API endpoints
     const API_BASE_URL = 'http://localhost:3000/api';
     const FAVORITES_API_URL = `${API_BASE_URL}/favorites`;
-    const SEARCH_API_URL = `${API_BASE_URL}/search`;
+    // FIXED: Use getAllCars=true parameter to get all cars from database
+    const SEARCH_API_URL = `${API_BASE_URL}/search?getAllCars=true`;
 
     // Current user data
     let currentUser = null;
@@ -243,7 +244,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 return;
             }
 
-            // Fetch all cars to get details
+            // FIXED: Fetch ALL cars to get details using getAllCars parameter
+            // This ensures we get the complete car database, not just search results
+            console.log('Fetching all cars from database for favorites details');
             const carsResponse = await fetch(SEARCH_API_URL);
 
             if (!carsResponse.ok) {
@@ -251,7 +254,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
 
             const allCars = await carsResponse.json();
-            console.log(`Fetched ${allCars.length} cars for details`);
+            console.log(`Fetched ${allCars.length} cars for details (should be complete database)`);
 
             // Display the favorites
             displayFavorites(favoritesData.favorites, allCars);
