@@ -6,8 +6,7 @@
  * This script manages the favorites page functionality:
  * - Fetches user's favorite cars
  * - Displays favorite cars with details
- * - Handles removing cars from favorites
- * - Manages favorite actions and UI updates
+ * - Handles removing individual cars from favorites
  */
 document.addEventListener('DOMContentLoaded', function() {
     // Elements
@@ -19,7 +18,6 @@ document.addEventListener('DOMContentLoaded', function() {
     const favoritesSection = document.getElementById('favorites-section');
     const favoritesCount = document.getElementById('favorites-count');
     const favoritesList = document.getElementById('favorites-list');
-    const clearAllButton = document.getElementById('clear-all-favorites');
     const favoriteCarTemplate = document.getElementById('favorite-car-template');
 
     // API endpoints
@@ -55,9 +53,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
     /**
      * Formats a date string for display
-     *
-     * @param {string} dateString - ISO date string
-     * @returns {string} - Formatted date
      */
     function formatDate(dateString) {
         const date = new Date(dateString);
@@ -70,9 +65,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
     /**
      * Formats a car price with proper currency formatting
-     *
-     * @param {number} price - The raw price value
-     * @returns {string} - Formatted price with currency symbol and commas
      */
     function formatPrice(price) {
         return `$${parseFloat(price).toLocaleString(undefined, {
@@ -83,10 +75,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
     /**
      * Creates a favorite car card from template and car data
-     *
-     * @param {Object} car - The car data object
-     * @param {string} dateAdded - When the car was added to favorites
-     * @returns {HTMLElement} - The populated car card DOM element
      */
     function createFavoriteCarCard(car, dateAdded) {
         try {
@@ -118,8 +106,8 @@ document.addEventListener('DOMContentLoaded', function() {
             const detailsLink = cardNode.querySelector('.details-button');
             const searchQuery = `${car.brand} ${car.model}`.toLowerCase().replace(/\s+/g, '+');
             detailsLink.href = `https://www.blocket.se/bilar/sok?q=${searchQuery}`;
-            detailsLink.target = '_blank'; // Open in new tab
-            detailsLink.rel = 'noopener noreferrer'; // Security best practice
+            detailsLink.target = '_blank';
+            detailsLink.rel = 'noopener noreferrer';
             detailsLink.textContent = 'Find on Blocket';
 
             // Set remove favorite button
@@ -138,9 +126,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
     /**
      * Removes a car from favorites
-     *
-     * @param {number} carId - The ID of the car to remove
-     * @param {HTMLElement} cardElement - The card element to remove from DOM
      */
     async function removeFavorite(carId, cardElement) {
         if (!confirm('Are you sure you want to remove this car from your favorites?')) {
@@ -188,63 +173,23 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     /**
-     * Clears all favorites after user confirmation
-     */
-    async function clearAllFavorites() {
-        if (!confirm('Are you sure you want to remove ALL cars from your favorites? This action cannot be undone.')) {
-            return;
-        }
-
-        try {
-            // Get all favorite car IDs
-            const favoriteCards = document.querySelectorAll('.remove-favorite-button');
-            const removePromises = [];
-
-            favoriteCards.forEach(button => {
-                const cardWrapper = button.closest('.car-card-wrapper');
-                const carId = button.getAttribute('data-car-id') ||
-                    cardWrapper.querySelector('.details-button').href.split('id=')[1];
-
-                if (carId) {
-                    removePromises.push(
-                        fetch(`${FAVORITES_API_URL}/${carId}`, {
-                            method: 'DELETE',
-                            headers: {
-                                'Authorization': `Bearer ${currentUser.id}`,
-                                'Content-Type': 'application/json'
-                            }
-                        })
-                    );
-                }
-            });
-
-            await Promise.all(removePromises);
-
-            // Clear the display
-            favoritesList.innerHTML = '';
-            favoritesSection.style.display = 'none';
-            noFavoritesContainer.style.display = 'block';
-
-            alert('All favorites have been cleared');
-        } catch (error) {
-            console.error('Error clearing all favorites:', error);
-            alert('An error occurred while clearing favorites');
-        }
-    }
-
-    /**
      * Displays the favorite cars
-     *
-     * @param {Array} favorites - Array of favorite objects with car_id and created_at
-     * @param {Array} cars - Array of all car objects
      */
     function displayFavorites(favorites, cars) {
+        // Hide loading and error states
         loadingContainer.style.display = 'none';
+        errorContainer.style.display = 'none';
 
         if (favorites.length === 0) {
+            // Hide favorites section and show no favorites message
+            favoritesSection.style.display = 'none';
             noFavoritesContainer.style.display = 'block';
             return;
         }
+
+        // Hide no favorites message and show favorites section
+        noFavoritesContainer.style.display = 'none';
+        favoritesSection.style.display = 'block';
 
         // Update count
         favoritesCount.textContent = `You have ${favorites.length} favorite car${favorites.length === 1 ? '' : 's'}`;
@@ -262,9 +207,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 console.warn(`Car with ID ${favorite.car_id} not found in search results`);
             }
         });
-
-        // Show favorites section
-        favoritesSection.style.display = 'block';
     }
 
     /**
@@ -337,7 +279,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Set up event listeners
         retryButton.addEventListener('click', fetchFavorites);
-        clearAllButton.addEventListener('click', clearAllFavorites);
 
         // Fetch and display favorites
         fetchFavorites();

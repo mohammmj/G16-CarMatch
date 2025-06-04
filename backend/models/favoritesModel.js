@@ -27,9 +27,16 @@ const addFavorite = async (userId, carId) => {
     `;
 
     try {
-        const result = await db.query(query, [userId, carId]);
+        // Ensure parameters are integers
+        const userIdInt = parseInt(userId);
+        const carIdInt = parseInt(carId);
+
+        console.log(`Adding favorite: userId=${userIdInt}, carId=${carIdInt}`);
+
+        const result = await db.query(query, [userIdInt, carIdInt]);
         return result.rows[0];
     } catch (error) {
+        console.error('Error in addFavorite:', error);
         // Check for unique violation (already favorited)
         if (error.code === '23505') {
             throw new Error('Car is already in favorites');
@@ -48,8 +55,33 @@ const addFavorite = async (userId, carId) => {
 const removeFavorite = async (userId, carId) => {
     const query = 'DELETE FROM favorites WHERE user_id = $1 AND car_id = $2';
 
-    const result = await db.query(query, [userId, carId]);
-    return result.rowCount > 0;
+    try {
+        // Ensure parameters are integers
+        const userIdInt = parseInt(userId);
+        const carIdInt = parseInt(carId);
+
+        console.log(`Attempting to remove favorite: userId=${userIdInt}, carId=${carIdInt}`);
+
+        // First check if the favorite exists
+        const checkQuery = 'SELECT * FROM favorites WHERE user_id = $1 AND car_id = $2';
+        const checkResult = await db.query(checkQuery, [userIdInt, carIdInt]);
+
+        console.log(`Found ${checkResult.rows.length} matching favorites before deletion`);
+
+        if (checkResult.rows.length === 0) {
+            console.log('No matching favorite found to delete');
+            return false;
+        }
+
+        // Perform the deletion
+        const result = await db.query(query, [userIdInt, carIdInt]);
+        console.log(`Delete operation affected ${result.rowCount} rows`);
+
+        return result.rowCount > 0;
+    } catch (error) {
+        console.error('Error in removeFavorite:', error);
+        throw error;
+    }
 };
 
 /**
@@ -66,13 +98,22 @@ const getUserFavorites = async (userId) => {
         ORDER BY created_at DESC
     `;
 
-    const result = await db.query(query, [userId]);
-    return result.rows;
+    try {
+        const userIdInt = parseInt(userId);
+        console.log(`Getting favorites for userId=${userIdInt}`);
+
+        const result = await db.query(query, [userIdInt]);
+        console.log(`Found ${result.rows.length} favorites for user`);
+
+        return result.rows;
+    } catch (error) {
+        console.error('Error in getUserFavorites:', error);
+        throw error;
+    }
 };
 
 /**
  * Gets detailed information about user's favorite cars
- * This would need to be modified based on your cars table structure
  *
  * @param {number} userId - The ID of the user
  * @returns {Promise<Array>} - Array of car IDs (you'll need to fetch car details separately)
@@ -85,8 +126,18 @@ const getUserFavoriteDetails = async (userId) => {
         ORDER BY f.created_at DESC
     `;
 
-    const result = await db.query(query, [userId]);
-    return result.rows;
+    try {
+        const userIdInt = parseInt(userId);
+        console.log(`Getting favorite details for userId=${userIdInt}`);
+
+        const result = await db.query(query, [userIdInt]);
+        console.log(`Found ${result.rows.length} favorite details for user`);
+
+        return result.rows;
+    } catch (error) {
+        console.error('Error in getUserFavoriteDetails:', error);
+        throw error;
+    }
 };
 
 /**
@@ -99,8 +150,21 @@ const getUserFavoriteDetails = async (userId) => {
 const isFavorited = async (userId, carId) => {
     const query = 'SELECT 1 FROM favorites WHERE user_id = $1 AND car_id = $2';
 
-    const result = await db.query(query, [userId, carId]);
-    return result.rows.length > 0;
+    try {
+        const userIdInt = parseInt(userId);
+        const carIdInt = parseInt(carId);
+
+        console.log(`Checking if favorited: userId=${userIdInt}, carId=${carIdInt}`);
+
+        const result = await db.query(query, [userIdInt, carIdInt]);
+        const isFav = result.rows.length > 0;
+
+        console.log(`Is favorited: ${isFav}`);
+        return isFav;
+    } catch (error) {
+        console.error('Error in isFavorited:', error);
+        throw error;
+    }
 };
 
 /**
@@ -112,21 +176,19 @@ const isFavorited = async (userId, carId) => {
 const getFavoritesCount = async (userId) => {
     const query = 'SELECT COUNT(*) FROM favorites WHERE user_id = $1';
 
-    const result = await db.query(query, [userId]);
-    return parseInt(result.rows[0].count);
-};
+    try {
+        const userIdInt = parseInt(userId);
+        console.log(`Getting favorites count for userId=${userIdInt}`);
 
-/**
- * Removes all favorites for a user (useful for account deletion)
- *
- * @param {number} userId - The ID of the user
- * @returns {Promise<number>} - Number of favorites removed
- */
-const removeAllUserFavorites = async (userId) => {
-    const query = 'DELETE FROM favorites WHERE user_id = $1';
+        const result = await db.query(query, [userIdInt]);
+        const count = parseInt(result.rows[0].count);
 
-    const result = await db.query(query, [userId]);
-    return result.rowCount;
+        console.log(`Favorites count: ${count}`);
+        return count;
+    } catch (error) {
+        console.error('Error in getFavoritesCount:', error);
+        throw error;
+    }
 };
 
 module.exports = {
@@ -135,6 +197,5 @@ module.exports = {
     getUserFavorites,
     getUserFavoriteDetails,
     isFavorited,
-    getFavoritesCount,
-    removeAllUserFavorites
+    getFavoritesCount
 };
