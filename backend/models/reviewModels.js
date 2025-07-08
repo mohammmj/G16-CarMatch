@@ -52,3 +52,37 @@ const getReviewsByCarId = async (carId) => {
 
     return result.rows;
 };
+
+//Statestik
+
+const getReviewStats = async (carid) => {
+    const query = `
+    SELECT
+    COUNT(*) AS total_reviews
+    AVG(rating) as average_rating
+    FROM reviews r
+    WHERE car_id = $1
+    `;
+
+    const result = await db.query(query, [carid]);
+    const stats = result.rows[0];
+    return{
+        total_reviews: stats.rows.length,
+        average_rating: stats.average_rating ? stats.average_rating : 0,
+    };
+};
+
+//Ta bort receension
+
+const deleteReview = async (userId, carId) => {
+    const query = `DELETE FROM reviews WHERE id = $1 AND user_id = $2`;
+    const result = await db.query(query, [carId]);
+    return result.rows[0];
+};
+
+module.exports = {
+    createReview,
+    getReviewsByCarId,
+    getReviewStats,
+    deleteReview,
+};
