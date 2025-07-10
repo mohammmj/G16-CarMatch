@@ -25,6 +25,7 @@ const authRoutes = require('./routes/authRoutes');
 const profileRoutes = require('./routes/profileRoutes');
 const favoritesRoutes = require('./routes/favoritesRoutes');
 
+
 // Initialize Express app
 const app = express();
 const PORT = 3000;
@@ -130,3 +131,6 @@ process.on('uncaughtException', (error) => {
 process.on('unhandledRejection', (error) => {
     console.error('Unhandled promise rejection:', error);
 });
+
+const reviewRoutes = require('./routes/reviewRoutes');
+app.use('/api/review', reviewRoutes);
