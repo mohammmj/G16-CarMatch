@@ -24,6 +24,7 @@ const searchRoutes = require('./routes/searchRoutes');
 const authRoutes = require('./routes/authRoutes');
 const profileRoutes = require('./routes/profileRoutes');
 const favoritesRoutes = require('./routes/favoritesRoutes');
+const reviewRoutes = require('./routes/reviewRoutes');
 
 
 // Initialize Express app
@@ -73,6 +74,7 @@ app.use('/api/search', searchRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/auth', profileRoutes); // Profile routes are also under /api/auth
 app.use('/api/favorites', favoritesRoutes); // New favorites routes
+app.use('/api/review', reviewRoutes);
 
 /**
  * Static file serving
@@ -132,5 +134,3 @@ process.on('unhandledRejection', (error) => {
     console.error('Unhandled promise rejection:', error);
 });
 
-const reviewRoutes = require('./routes/reviewRoutes');
-app.use('/api/review', reviewRoutes);
