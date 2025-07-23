@@ -28,7 +28,7 @@ def index():
             conn.commit()
             cursor.close()
             conn.close()
-            return "s.html" 
+            return render_template ("alla_medelande.html" )
 
         except Exception as e:
             return f"Ett fel uppstod: {e}"
