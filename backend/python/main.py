@@ -1,4 +1,7 @@
 import psycopg2
+from flask import Flask, request, render_template
+
+app = Flask(__name__)
 
 def connect_to_db():
     try:
@@ -14,21 +17,23 @@ def connect_to_db():
         print("Kunde inte ansluta till databasen:", e)
         return None
     
-conn = connect_to_db()
-if conn is None:
-    exit()
-
-cursor = conn.cursor()
-
-def skriva_text():
+@app.route("/", methods=["GET", "POST"])
+def index():
+    if request.method == "POST":
+        namn = request.form["namn"]
+        text = request.form["text"]
+        
     try:
-        namn=input("vad heter du ")
-        text=input("vad vill du skriva ")
+        conn = connect_to_db()
+        cursor = conn.cursor()
         cursor.execute("""
             insert into messages 
                 (sender,message) values ( %s, %s );
             """, (namn, text))
         conn.commit()
+        cursor.close()
+        conn.close()
+        return "Meddelande sparat!"
 
     except Exception as e:
             print("Ett fel uppstod:", e)
@@ -37,4 +42,5 @@ def skriva_text():
             cursor.close()
             conn.close()
 
-skriva_text()
+if __name__ == "__main__":
+    app.run(debug=True)
