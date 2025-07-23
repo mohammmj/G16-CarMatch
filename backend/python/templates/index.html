@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+    <meta charset="UTF-8">
+    <title>Skriv ett meddelande</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <div class="form-container">
+        <h1>Skriv ett meddelande</h1>
+        <form method="POST">
+            <label for="namn">Ditt namn:</label>
+            <input type="text" name="namn" required>
+
+            <label for="text">Meddelande:</label>
+            <textarea name="text" rows="4" required></textarea>
+
+            <button type="submit">Skicka</button>
+        </form>
+    </div>
+</body>
+</html>
