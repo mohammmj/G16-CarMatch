@@ -20,7 +20,24 @@
         </nav>
     </header>
 
-    
+    <div class="message-container">
+        <h1>Alla Meddelanden</h1>
+        {% if meddelanden %}
+            <ul>
+            {% for meddelande in meddelanden %}
+                <li>
+                    <strong>{{ meddelande[0] }}</strong>: {{ meddelande[1] }}
+                </li>
+            {% endfor %}
+            </ul>
+        {% else %}
+            <p>Inga meddelanden har skrivits ännu.</p>
+        {% endif %}
+    </div>
+
+    <footer>
+        <p>&copy; 2025 CarMatch.</p>
+    </footer>
     
 </body>
 </html>

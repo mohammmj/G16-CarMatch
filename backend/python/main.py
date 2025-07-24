@@ -1,5 +1,5 @@
 import psycopg2
-from flask import Flask, request, render_template
+from flask import Flask, request, render_template, redirect, url_for
 
 app = Flask(__name__)
 
@@ -28,11 +28,26 @@ def index():
             conn.commit()
             cursor.close()
             conn.close()
-            return render_template ("alla_medelande.html" )
+            return redirect(url_for('alla_meddelanden'))
 
         except Exception as e:
             return f"Ett fel uppstod: {e}"
     return render_template("index.html")
+
+@app.route("/alla_meddelanden")
+def alla_meddelanden():
+    meddelanden = []
+    try:
+        conn = connect_to_db()
+        cursor = conn.cursor()
+        cursor.execute("SELECT sender, message FROM messages ORDER BY m_id DESC")
+        meddelanden = cursor.fetchall()
+        cursor.close()
+        conn.close()
+    except Exception as e:
+        return f"Ett fel uppstod: {e}"
+
+    return render_template("alla_medelande.html", meddelanden=meddelanden)
 
 if __name__ == "__main__":
     app.run(debug=True, port=5001)
