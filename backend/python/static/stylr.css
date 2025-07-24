@@ -1,0 +1,152 @@
+/* Generell styling */
+:root {
+    --primary-color: #3f51b5; /* En snygg blå färg */
+    --background-color: #f4f4f9;
+    --card-background: #fff;
+    --text-color: #333;
+    --border-color: #e0e0e0;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
+      Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+    background-color: var(--background-color);
+    color: var(--text-color);
+}
+
+/* ================== Header ================== */
+header {
+    background-color: var(--card-background);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    position: sticky;
+    top: 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 10%;
+    height: 70px;
+    z-index: 1000;
+}
+  
+header a {
+    text-decoration: none;
+}
+  
+header h1 {
+    color: var(--primary-color);
+    font-size: 24px;
+    margin: 0;
+}
+  
+header nav ul {
+    display: flex;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+  
+header nav li {
+    margin-left: 20px;
+}
+  
+header nav a {
+    color: var(--text-color);
+    font-weight: 500;
+    padding: 5px 0;
+    text-decoration: none;
+}
+  
+header nav a:hover {
+    text-decoration: underline;
+    color: var(--primary-color);
+}
+
+/* ================== Formulär container ================== */
+.form-container {
+    background: var(--card-background);
+    margin: 50px auto;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    max-width: 500px;
+    text-align: center;
+}
+
+.form-container h1 {
+    margin-bottom: 20px;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+input, textarea {
+    width: 100%;
+    padding: 12px;
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+    box-sizing: border-box;
+    font-size: 16px;
+}
+
+button {
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #303f9f;
+}
+
+/* ================== Meddelande container ================== */
+.message-container {
+    background: var(--card-background);
+    margin: 50px auto;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    max-width: 700px;
+    flex-grow: 1; /* Låter meddelande-containern ta upp resterande utrymme */
+}
+
+.message-container ul {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 15px; /* Skapar utrymme mellan meddelandena */
+}
+
+.message-container li {
+    background-color: var(--background-color);
+    padding: 15px;
+    border-radius: 10px;
+    border: 1px solid var(--border-color);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+
+.message-container strong {
+    color: var(--primary-color);
+}
+
+
+/* ================== Footer ================== */
+footer {
+    text-align: center;
+    padding: 20px;
+    background-color: var(--card-background);
+    border-top: 1px solid var(--border-color);
+    margin-top: auto; /* Säkrar att footern hamnar längst ner */
+}
