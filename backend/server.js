@@ -79,7 +79,7 @@ app.use('/api/review', reviewRoutes);
 /**
  * Static file serving
  *
- * Serves frontend files
+ * Serves frontend file
  */
 app.use(express.static(path.join(__dirname, '../frontend')));
 
