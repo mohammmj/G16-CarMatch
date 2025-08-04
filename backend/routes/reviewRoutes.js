@@ -16,6 +16,31 @@ function authenticate(req, res, next) {
     next();
 }
 
+router.get('/car/:carId', async (req, res) => {
+    try {
+        const carId = req.params.carId;
+
+        if (!carId || isNaN(carId)) {
+            return res.status(400).json({
+                success: false,
+                message: 'Valid car ID is required'
+            });
+        }
+
+        const reviews = await reviewModels.getReviewsByCarId(carId);
+
+        res.json({
+            success: true,
+            reviews: reviews
+        });
+    } catch (error) {
+        console.error('Error fetching reviews:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Error fetching reviews'
+        });
+    }
+});
 //skapa recension
 
 router.post('/', authenticate, async (req, res) => {

@@ -277,6 +277,25 @@ document.addEventListener('DOMContentLoaded', function() {
                 e.preventDefault();
                 toggleFavorite(car.id, favoriteButton);
             });
+            if (window.ReviewsUI) {
+                // Lägg till en unik container för varje bil
+                const reviewsContainer = cardNode.querySelector('.reviews-content');
+                reviewsContainer.id = `reviews-container-${car.id}`;
+
+                // Sätt upp click-händelse för toggle-knappen
+                const toggleBtn = cardNode.querySelector('.toggle-reviews-btn');
+                toggleBtn.addEventListener('click', async () => {
+                    if (reviewsContainer.style.display === 'none') {
+                        reviewsContainer.style.display = 'block';
+                        toggleBtn.textContent = 'Hide Reviews';
+                        await ReviewsUI.showReviews(car.id, `reviews-container-${car.id}`);
+                    } else {
+                        reviewsContainer.style.display = 'none';
+                        toggleBtn.textContent = 'Show Reviews';
+                    }
+                });
+            }
+            console.log('About to check ReviewsUI:', window.ReviewsUI);
 
             return cardNode;
         } catch (error) {
