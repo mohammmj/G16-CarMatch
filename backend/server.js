@@ -115,6 +115,7 @@ const startServer = async () => {
         console.log(`Authentication API available at http://localhost:${PORT}/api/auth`);
         console.log(`Profile API available at http://localhost:${PORT}/api/auth/profile`);
         console.log(`Favorites API available at http://localhost:${PORT}/api/favorites`);
+        console.log(`Review API available at http://localhost:${PORT}/api/review`)
     });
 };
 

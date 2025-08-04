@@ -58,7 +58,7 @@ const getReviewsByCarId = async (carId) => {
 const getReviewStats = async (carid) => {
     const query = `
     SELECT
-    COUNT(*) AS total_reviews
+    COUNT(*) AS total_reviews,
     AVG(rating) as average_rating
     FROM reviews r
     WHERE car_id = $1
@@ -67,15 +67,20 @@ const getReviewStats = async (carid) => {
     const result = await db.query(query, [carid]);
     const stats = result.rows[0];
     return{
-        total_reviews: stats.rows.length,
+        total_reviews: parseInt(stats.total_reviews),
         average_rating: stats.average_rating ? stats.average_rating : 0,
     };
 };
 
 //Ta bort receension
 
-const deleteReview = async (userId, carId) => {
+const deleteReview = async (reviewId, carId) => {
     const query = `DELETE FROM reviews WHERE id = $1 AND user_id = $2`;
+    try{ const result = await db.query(query, [parseInt(reviewId), parseInt(carId)]);
+    return result.rowCount > 0;
+    } catch (error) {
+
+    }
     const result = await db.query(query, [carId]);
     return result.rows[0];
 };

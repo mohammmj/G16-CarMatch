@@ -896,3 +896,45 @@ margin: auto;
     padding: 3px 8px;
   }
 }
+
+.reviews-container {
+    max-width: 600px;
+    margin: 20px 0;
+}
+
+.reviews-container h3 {
+    color: #007bff;
+    border-bottom: 2px solid #007bff;
+    padding-bottom: 5px;
+}
+
+.reviews-container form {
+    background: #f8f9fa;
+    padding: 15px;
+    border-radius: 5px;
+    margin: 15px 0;
+}
+
+.reviews-container input,
+.reviews-container textarea,
+.reviews-container select {
+    width: 100%;
+    padding: 8px;
+    margin: 5px 0;
+    border: 1px solid #ddd;
+    border-radius: 3px;
+    box-sizing: border-box;
+}
+
+.reviews-container button {
+    background: #007bff;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+}
+
+.reviews-container button:hover {
+    background: #0056b3;
+}
