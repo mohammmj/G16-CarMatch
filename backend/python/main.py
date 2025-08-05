@@ -32,7 +32,7 @@ def index():
 
         except Exception as e:
             return f"Ett fel uppstod: {e}"
-    return render_template("index.html")
+    return render_template("index_chatt.html")
 
 @app.route("/alla_meddelanden")
 def alla_meddelanden():
