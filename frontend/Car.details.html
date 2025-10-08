@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+  <meta charset="utf-8">
+  <title>Bildetaljer - CarMatch</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/car-details.css">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body>
+<header>
+  <a href="index.html">
+    <h1>CarMatch</h1>
+  </a>
+
+  <nav>
+    <ul>
+      <li><a href="index.html">Home</a></li>
+      <li><a href="log_in.html">Login</a></li>
+      <li><a href="register.html">Register</a></li>
+      <li><a href="http://localhost:5001">Chatt</a></li>
+    </ul>
+  </nav>
+</header>
+
+<main class="container">
+  <!-- Loading State -->
+  <div class="loading-container" id="loading-container">
+    <div class="loading-spinner"></div>
+    <p>Laddar bildetaljer...</p>
+  </div>
+
+  <!-- Error State -->
+  <div class="error-container" id="error-container" style="display: none;">
+    <p class="error-message" id="error-message"></p>
+    <button class="btn btn-primary" onclick="window.history.back()">Tillbaka</button>
+  </div>
+
+  <!-- Car Details Content -->
+  <div class="car-details-page" id="car-details-content" style="display: none;">
+    <!-- Back Button -->
+    <div class="back-button-section">
+      <button class="btn btn-outline-secondary" onclick="window.history.back()">
+        ← Tillbaka till sökresultat
+      </button>
+    </div>
+
+    <!-- Car Header -->
+    <div class="car-header">
+      <div class="row align-items-center">
+        <div class="col-md-8">
+          <h1 class="car-title" id="car-title"></h1>
+          <p class="car-subtitle" id="car-subtitle"></p>
+        </div>
+        <div class="col-md-4 text-end">
+          <div class="car-price" id="car-price"></div>
+          <button class="btn btn-danger btn-lg mt-2" id="contact-button">
+            Hitta på Blocket
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Car Image -->
+    <div class="car-image-section">
+      <img id="car-image" src="" alt="" class="car-detail-image">
+    </div>
+
+    <!-- Fakta Section -->
+    <div class="car-facts-section">
+      <h2>Fakta</h2>
+      <div class="facts-grid" id="facts-grid">
+        <!-- Facts will be inserted here -->
+      </div>
+    </div>
+
+    <!-- Utrustning Section -->
+    <div class="car-equipment-section">
+      <h2>Utrustning</h2>
+      <div class="row">
+        <div class="col-md-6">
+          <ul class="equipment-list" id="equipment-list-1">
+            <!-- Equipment will be inserted here -->
+          </ul>
+        </div>
+        <div class="col-md-6">
+          <ul class="equipment-list" id="equipment-list-2">
+            <!-- Equipment will be inserted here -->
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Reviews Section -->
+    <div class="car-reviews-section">
+      <h2>Recensioner</h2>
+      <div id="reviews-container"></div>
+    </div>
+  </div>
+</main>
+
+<footer>
+  <p>&copy; 2025 CarMatch.</p>
+</footer>
+
+<script src="js/car-details.js"></script>
+<script src="js/nav-auth.js"></script>
+<script src="js/reviews.js"></script>
+</body>
+</html>
