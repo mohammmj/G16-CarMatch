@@ -82,6 +82,7 @@ app.use('/api/favorites', favoritesRoutes); // New favorites routes
 app.use('/api/review', reviewRoutes);
 app.use('/api/cars', carRoutes);
 
+
 /**
  * Static file serving
  *
