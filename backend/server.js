@@ -25,6 +25,8 @@ const authRoutes = require('./routes/authRoutes');
 const profileRoutes = require('./routes/profileRoutes');
 const favoritesRoutes = require('./routes/favoritesRoutes');
 const reviewRoutes = require('./routes/reviewRoutes');
+const carRoutes = require('./routes/carRoutes');
+
 
 
 // Initialize Express app
@@ -44,6 +46,9 @@ app.use((req, res, next) => {
 /**
  * CORS middleware configuration
  *
+ *
+
+
  * Enables Cross-Origin Resource Sharing for development environments
  */
 app.use(cors({
@@ -75,6 +80,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/auth', profileRoutes); // Profile routes are also under /api/auth
 app.use('/api/favorites', favoritesRoutes); // New favorites routes
 app.use('/api/review', reviewRoutes);
+app.use('/api/cars', carRoutes);
 
 /**
  * Static file serving
