@@ -260,29 +260,49 @@ document.addEventListener('DOMContentLoaded', function() {
             // Set price
             cardNode.querySelector('.car-card-price').textContent = formatPrice(car.price);
 
-            // Set details link to redirect to Blocket search
+            // Blocket link
             const detailsLink = cardNode.querySelector('.details-button');
             const searchQuery = `${car.brand} ${car.model}`.toLowerCase().replace(/\s+/g, '+');
             detailsLink.href = `https://www.blocket.se/bilar/sok?q=${searchQuery}`;
-            detailsLink.target = '_blank'; // Open in new tab
-            detailsLink.rel = 'noopener noreferrer'; // Security best practice
+            detailsLink.target = '_blank';
+            detailsLink.rel = 'noopener noreferrer';
             detailsLink.textContent = 'Find on Blocket';
 
-            // Set favorite button with car ID data attribute
+            // View Details button
+            const carCardActions = cardNode.querySelector('.car-card-actions');
+
+            // View Details button
+            const viewDetailsButton = document.createElement('a');
+            viewDetailsButton.href = `car_details.html?id=${car.id}`;
+            viewDetailsButton.className = 'details-button view-details-btn';
+            viewDetailsButton.textContent = 'View Details';
+            viewDetailsButton.style.backgroundColor = '#007bff';
+            viewDetailsButton.style.marginLeft = '10px';
+
+            viewDetailsButton.addEventListener('click', function(e) {
+                e.preventDefault();
+                window.location.href = `car_details.html?id=${car.id}`;
+            });
+
+            // Blocket button
+            carCardActions.appendChild(viewDetailsButton);
+
+            // favorite button with car ID data attribute
             const favoriteButton = cardNode.querySelector('.favorite-button');
             const cardWrapper = cardNode.querySelector('.car-card-wrapper');
-            cardWrapper.dataset.carId = car.id; // Add car ID to wrapper for easier selection
+            cardWrapper.dataset.carId = car.id;
 
             favoriteButton.addEventListener('click', function(e) {
                 e.preventDefault();
                 toggleFavorite(car.id, favoriteButton);
             });
+
             if (window.ReviewsUI) {
-                // Lägg till en unik container för varje bil
+                // Container for each car
                 const reviewsContainer = cardNode.querySelector('.reviews-content');
                 reviewsContainer.id = `reviews-container-${car.id}`;
 
-                // Sätt upp click-händelse för toggle-knappen
+                // click action toggle button
                 const toggleBtn = cardNode.querySelector('.toggle-reviews-btn');
                 toggleBtn.addEventListener('click', async () => {
                     if (reviewsContainer.style.display === 'none') {
@@ -300,7 +320,7 @@ document.addEventListener('DOMContentLoaded', function() {
             return cardNode;
         } catch (error) {
             console.error('Error creating car card:', error);
-            return document.createElement('div'); // Return empty div to avoid breaking the page
+            return document.createElement('div');
         }
     }
 
@@ -408,7 +428,7 @@ document.addEventListener('DOMContentLoaded', function() {
         carList.innerHTML = '';
 
         if (cars.length === 0) {
-            // Show a message when no results are found
+            // Message when no results are found
             carList.innerHTML = `
                 <div class="no-results">
                     <h3>No cars found matching your criteria</h3>
@@ -416,7 +436,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 </div>
             `;
         } else {
-            // Add each car card
+            // each car card
             cars.forEach(car => {
                 const cardElement = createCarCard(car);
                 carList.appendChild(cardElement);
